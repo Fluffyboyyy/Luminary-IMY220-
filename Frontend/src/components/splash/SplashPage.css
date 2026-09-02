@@ -1,0 +1,305 @@
+/* ========================================
+              Desktop Responsive
+   ======================================== */
+
+.splash-page {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  background: #F5F5FA;
+}
+
+.splash-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.left-column {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.hero-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 3rem 4rem;
+  padding-left: 6rem;
+  background: #F5F5FA;
+  color: #1A1A2E;
+  width: 100%;
+}
+
+.hero-content {
+  max-width: 600px;
+  z-index: 2;
+  text-align: left;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1A1A2E;
+}
+
+.hero-tagline {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: #6B6B7B;
+}
+
+.hero-description {
+  font-size: 1rem;
+  color: #6B6B7B;
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.btn {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.btn-primary {
+  background: #6C63FF;
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background: #5A52D5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #6C63FF;
+  border: 2px solid #6C63FF;
+}
+
+.btn-secondary:hover {
+  background: #6C63FF;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+}
+
+.btn-large {
+  padding: 14px 32px;
+  font-size: 1rem;
+}
+
+.right-column {
+  flex: 0.8;
+  background: #F5F5FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.auth-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-container {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-title {
+  font-size: 1.5rem;
+  color: #1A1A2E;
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  color: #6B6B7B;
+  font-size: 0.85rem;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 2px solid #E8E8F0;
+  margin-bottom: 1.5rem;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6B6B7B;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+}
+
+.auth-tab.active {
+  color: #6C63FF;
+}
+
+.auth-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #6C63FF;
+}
+
+.auth-tab:hover {
+  color: #6C63FF;
+}
+
+.auth-form-container {
+  padding: 0.25rem 0;
+}
+
+/* ========================================
+            Tablets Responsive
+   ======================================== */
+
+@media (max-width: 992px) {
+  .splash-container {
+    flex-direction: column;
+  }
+
+  .left-column {
+    flex: 1;
+    min-height: auto;
+  }
+
+  .hero-section {
+    padding: 3rem 2rem;
+    padding-left: 2rem;
+    min-height: 40vh;
+  }
+
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.3rem;
+  }
+
+  .hero-actions {
+    justify-content: flex-start;
+  }
+
+  .right-column {
+    flex: 1;
+    padding: 3rem 2rem;
+    min-height: 60vh;
+  }
+
+  .auth-container {
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+}
+
+/* ========================================
+              Mobile Responsive
+   ======================================== */
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 2rem 1.5rem;
+    padding-left: 1.5rem;
+    min-height: 35vh;
+  }
+
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.1rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .btn-large {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+
+  .right-column {
+    padding: 2rem 1rem;
+    min-height: 50vh;
+  }
+
+  .auth-container {
+    padding: 1.25rem;
+    border-radius: 16px;
+    max-width: 100%;
+  }
+
+  .auth-title {
+    font-size: 1.3rem;
+  }
+
+  .auth-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .auth-tab {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+  }
+}
