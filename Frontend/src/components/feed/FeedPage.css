@@ -1,0 +1,316 @@
+/* ========================================
+            FEED PAGE Desktop
+   ======================================== */
+
+.feed-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.feed-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.feed-header h1 {
+  font-size: 2.5rem;
+  font-family: 'Montserrat', sans-serif;
+  color: #1A1A2E;
+  margin-bottom: 0.25rem;
+}
+
+.feed-subtitle {
+  color: #6B6B7B;
+  font-size: 1.1rem;
+}
+
+.search-container {
+  position: relative;
+  margin-bottom: 1.5rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px 12px 48px;
+  border: 2px solid #E8E8F0;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background: #FFFFFF;
+  color: #1A1A2E;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.search-input::placeholder {
+  color: #6B6B7B;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6B6B7B;
+  font-size: 1.1rem;
+}
+
+.feed-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.feed-tab {
+  padding: 10px 24px;
+  border: 2px solid #E8E8F0;
+  border-radius: 50px;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #6B6B7B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.feed-tab:hover {
+  border-color: #6C63FF;
+  color: #6C63FF;
+}
+
+.feed-tab.active {
+  background: #6C63FF;
+  border-color: #6C63FF;
+  color: #FFFFFF;
+}
+
+.posts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.post-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+}
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.post-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-username {
+  font-weight: 600;
+  color: #1A1A2E;
+  font-size: 0.95rem;
+}
+
+.post-userhandle {
+  font-size: 0.8rem;
+  color: #6B6B7B;
+}
+
+.post-time {
+  font-size: 0.8rem;
+  color: #6B6B7B;
+}
+
+.post-image-wrapper {
+  background: #E8E8F0;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.post-content {
+  padding: 1.25rem;
+}
+
+.post-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #1A1A2E;
+  margin-bottom: 0.5rem;
+}
+
+.post-hashtags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.hashtag {
+  color: #6C63FF;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.post-stats {
+  display: flex;
+  gap: 1.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #E8E8F0;
+}
+
+.post-stat {
+  font-size: 0.9rem;
+  color: #6B6B7B;
+}
+
+/* ========================================
+            Tablets (max-width: 768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .feed-page {
+    padding: 1rem;
+  }
+
+  .feed-header h1 {
+    font-size: 2rem;
+  }
+
+  .feed-subtitle {
+    font-size: 1rem;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .search-input {
+    padding: 10px 16px 10px 44px;
+    font-size: 0.95rem;
+  }
+
+  .feed-tab {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+
+  .post-content {
+    padding: 1rem;
+  }
+}
+
+/* ========================================
+            Mobile (max-width: 480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+  .feed-page {
+    padding: 0.5rem;
+  }
+
+  .feed-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .feed-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .search-container {
+    margin-bottom: 1rem;
+  }
+
+  .search-input {
+    padding: 8px 16px 8px 40px;
+    font-size: 0.85rem;
+    border-radius: 50px;
+  }
+
+  .search-icon {
+    left: 14px;
+    font-size: 1rem;
+  }
+
+  .feed-tabs {
+    gap: 0.25rem;
+  }
+
+  .feed-tab {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .post-header {
+    padding: 0.75rem;
+  }
+
+  .post-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .post-username {
+    font-size: 0.85rem;
+  }
+
+  .post-content {
+    padding: 0.75rem;
+  }
+
+  .post-description {
+    font-size: 0.9rem;
+  }
+
+  .post-stats {
+    gap: 1rem;
+  }
+
+  .post-stat {
+    font-size: 0.8rem;
+  }
+
+  .posts-grid {
+    gap: 1rem;
+  }
+}
