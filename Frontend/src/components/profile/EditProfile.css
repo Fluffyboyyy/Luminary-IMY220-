@@ -1,0 +1,142 @@
+/* ========================================
+           Desktop
+   ======================================== */
+.edit-profile {
+  background: var(--color-white, #FFFFFF);
+  border: 1px solid var(--color-gray-light, #E8E8F0);
+  padding: var(--spacing-lg, 2rem);
+  border-radius: var(--radius-md, 12px);
+  margin-top: var(--spacing-lg, 2rem);
+}
+
+.edit-profile-title {
+  font-size: 1.3rem;
+  color: var(--color-dark, #1A1A2E);
+  margin-bottom: var(--spacing-lg, 2rem);
+  padding-bottom: var(--spacing-sm, 0.5rem);
+  border-bottom: 2px solid var(--color-primary, #6C63FF);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md, 1rem);
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-dark, #1A1A2E);
+  margin-bottom: var(--spacing-xs, 0.25rem);
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--color-gray-light, #E8E8F0);
+  border-radius: var(--radius-sm, 8px);
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast, 0.2s ease);
+  background: var(--color-background, #F5F5FA);
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--color-primary, #6C63FF);
+  background: var(--color-white, #FFFFFF);
+}
+
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--color-secondary, #FF6584);
+}
+
+.error-message {
+  display: block;
+  color: var(--color-secondary, #FF6584);
+  font-size: 0.8rem;
+  margin-top: var(--spacing-xs, 0.25rem);
+}
+
+.char-count {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-gray, #6B6B7B);
+  margin-top: var(--spacing-xs, 0.25rem);
+  text-align: right;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-full, 50px);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+}
+
+.btn-primary {
+  background: var(--color-primary, #6C63FF);
+  color: var(--color-white, #FFFFFF);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-dark, #5A52D5);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.1));
+}
+
+
+
+/* ========================================
+            Tablets (max-width: 768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .edit-profile {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* ========================================
+            Mobile (max-width: 480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+  .edit-profile,
+  .create-post {
+    padding: var(--spacing-md, 1rem);
+    border-radius: var(--radius-sm, 8px);
+  }
+  
+  .edit-profile-title,
+  .create-post-title {
+    font-size: 1.1rem;
+    margin-bottom: var(--spacing-md, 1rem);
+  }
+  
+  .form-group {
+    margin-bottom: var(--spacing-sm, 0.5rem);
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    width: 100%; 
+  }
+}

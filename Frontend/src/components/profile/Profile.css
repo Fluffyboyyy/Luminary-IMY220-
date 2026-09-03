@@ -1,0 +1,150 @@
+/* ========================================
+            Profile PAGE Desktop
+   ======================================== */
+
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-lg, 2rem);
+  background: var(--color-white, #FFFFFF);
+  border-radius: var(--radius-md, 12px);
+  border: 1px solid var(--color-gray-light, #E8E8F0);
+}
+
+.profile-avatar-container {
+  margin-bottom: var(--spacing-md, 1rem);
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-full, 50%);
+  border: 3px solid var(--color-primary, #6C63FF);
+  object-fit: cover;
+}
+
+.profile-info {
+  text-align: center;
+  width: 100%;
+}
+
+.profile-name {
+  font-size: 1.8rem;
+  font-family: var(--font-secondary, 'Montserrat', sans-serif);
+  color: var(--color-dark, #1A1A2E);
+  margin: 0 0 var(--spacing-xs, 0.25rem);
+}
+
+.profile-username {
+  color: var(--color-gray, #6B6B7B);
+  font-size: 1rem;
+  margin: 0 0 var(--spacing-sm, 0.5rem);
+}
+
+.profile-bio {
+  font-size: 1rem;
+  color: var(--color-dark, #1A1A2E);
+  margin: var(--spacing-sm, 0.5rem) 0;
+}
+
+.profile-location {
+  color: var(--color-gray, #6B6B7B);
+  font-size: 0.95rem;
+  margin: var(--spacing-xs, 0.25rem) 0;
+}
+
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-xl, 4rem);
+  margin-top: var(--spacing-md, 1rem);
+  padding-top: var(--spacing-md, 1rem);
+  border-top: 1px solid var(--color-gray-light, #E8E8F0);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--color-dark, #1A1A2E);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--color-gray, #6B6B7B);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+
+/* ========================================
+            Tablets (max-width: 768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .profile {
+    padding: var(--spacing-md, 1rem);
+  }
+
+  .profile-avatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .profile-name {
+    font-size: 1.4rem;
+  }
+
+  .profile-stats {
+    gap: var(--spacing-lg, 2rem);
+  }
+}
+
+
+/* ========================================
+            Mobile (max-width: 480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+  .profile {
+    padding: var(--spacing-md, 1rem);
+    border-radius: var(--radius-sm, 8px);
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-name {
+    font-size: 1.2rem;
+  }
+  
+  .profile-username {
+    font-size: 0.9rem;
+  }
+  
+  .profile-bio {
+    font-size: 0.9rem;
+  }
+  
+  .profile-stats {
+    gap: var(--spacing-md, 1rem);
+    flex-wrap: wrap;
+  }
+  
+  .stat-number {
+    font-size: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+}
