@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
+import LoginForm from '../components/splash/LoginForm';
+import RegisterForm from '../components/splash/RegisterForm';
 import './SplashPage.css';
 
 const SplashPage = () => {

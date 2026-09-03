@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SplashPage from './components/splash/SplashPage';
-import FeedPage from './components/feed/FeedPage';
-import ProfilePage from './components/profile/ProfilePage';
+import SplashPage from './pages/SplashPage';
+import FeedPage from './pages/FeedPage';
+import ProfilePage from './pages/ProfilePage';
+import PostPage from './pages/PostPage';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/home" element={<FeedPage /> } />
             <Route path="/profile" element={<ProfilePage /> } />
             <Route path="/profile/:userId" element={<ProfilePage />} />
+            <Route path="/post/:postId" element={<PostPage />} />
           </Routes>
         </main>
       </div>

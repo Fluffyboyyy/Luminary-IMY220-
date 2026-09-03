@@ -1,0 +1,141 @@
+/* ========================================
+           Desktop
+   ======================================== */
+.post-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--spacing-lg, 2rem);
+  min-height: 100vh;
+}
+
+.post-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 2rem);
+}
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm, 0.5rem);
+  color: var(--color-gray, #6B6B7B);
+  text-decoration: none;
+  font-weight: 500;
+  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+  border-radius: var(--radius-full, 50px);
+  transition: all var(--transition-fast, 0.2s ease);
+  width: fit-content;
+  /* Override default button styles */
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+}
+
+.back-button:hover {
+  background: var(--color-gray-light, #E8E8F0);
+  color: var(--color-primary, #6C63FF);
+}
+
+.back-icon {
+  font-size: 1.2rem;
+}
+
+.post-page-error,
+.post-page-not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  gap: var(--spacing-md, 1rem);
+}
+
+.post-page-error p,
+.post-page-not-found p {
+  color: var(--color-gray, #6B6B7B);
+  font-size: 1.1rem;
+}
+
+.not-found-icon {
+  font-size: 4rem;
+}
+
+.post-page-not-found h2 {
+  color: var(--color-dark, #1A1A2E);
+}
+
+.post-albums {
+  background: var(--color-white, #FFFFFF);
+  border-radius: var(--radius-md, 12px);
+  padding: var(--spacing-lg, 2rem);
+  box-shadow: var(--shadow-sm, 0 2px 4px rgba(0,0,0,0.1));
+}
+
+.post-albums h3 {
+  font-size: 1.1rem;
+  color: var(--color-dark, #1A1A2E);
+  margin-bottom: var(--spacing-md, 1rem);
+}
+
+.album-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm, 0.5rem);
+}
+
+.album-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs, 0.25rem);
+  padding: 6px 16px;
+  background: var(--color-gray-light, #E8E8F0);
+  border-radius: var(--radius-full, 50px);
+  color: var(--color-dark, #1A1A2E);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.album-tag:hover {
+  background: var(--color-primary, #6C63FF);
+  color: var(--color-white, #FFFFFF);
+  transform: translateY(-2px);
+}
+
+
+/* ========================================
+            Tablets (max-width: 768px)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .post-page {
+    padding: var(--spacing-md, 1rem);
+  }
+
+  .post-page-container {
+    gap: var(--spacing-md, 1rem);
+  }
+
+  .post-albums {
+    padding: var(--spacing-md, 1rem);
+  }
+}
+
+/* ========================================
+            Mobile (max-width: 480px)
+   ======================================== */
+
+@media (max-width: 480px) {
+  .post-page {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+
+  .back-button {
+    padding: 4px 12px;
+    font-size: 0.9rem;
+  }
+}

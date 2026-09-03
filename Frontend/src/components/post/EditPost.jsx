@@ -1,15 +1,15 @@
 import React, { useState, useRef } from 'react';
-import './CreatePost.css';
+import './EditPost.css';
 
-const CreatePost = () => {
+const EditPost = ({ post, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
-    image: null,
-    description: '',
-    location: ''
+    image: post?.image || null,
+    description: post?.description || '',
+    location: post?.location || ''
   });
-
   const [errors, setErrors] = useState({});
   const [isDragging, setIsDragging] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [fileName, setFileName] = useState('');
   const fileInputRef = useRef(null);
 
@@ -18,7 +18,7 @@ const CreatePost = () => {
     
     if (!formData.image) {
       newErrors.image = 'Image is required';
-    } else if (!formData.image.type.startsWith('image/')) {
+    } else if (typeof formData.image === 'object' && !formData.image.type.startsWith('image/')) {
       newErrors.image = 'Please upload a valid image file';
     }
     
@@ -118,30 +118,33 @@ const CreatePost = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     if (validate()) {
-      console.log('Post created:', {
+      const saveData = {
         image: formData.image,
         description: formData.description,
         location: formData.location
-      });
-      alert('Post created successfully!');
-      
-      setFormData({
-        image: null,
-        description: '',
-        location: ''
-      });
-      setFileName('');
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+      };
+      onSave(saveData);
+      setIsSubmitting(false);
+    } else {
+      setIsSubmitting(false);
     }
   };
 
+  if (!post) {
+    return (
+      <div className="edit-post-not-found">
+        <p>Post not found</p>
+        <button className="btn btn-primary" onClick={onCancel}>Go Back</button>
+      </div>
+    );
+  }
+
   return (
-    <div className="create-post">
-      <h3 className="create-post-title">Create New Post</h3>
+    <div className="edit-post">
+      <h3 className="edit-post-title">Edit Post</h3>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="image">Upload Image *</label>
@@ -156,7 +159,6 @@ const CreatePost = () => {
           >
             {fileName ? (
               <div className="file-info">
-                <span className="file-icon">📷</span>
                 <span className="file-name">{fileName}</span>
                 <button
                   type="button"
@@ -201,7 +203,7 @@ const CreatePost = () => {
             onChange={handleChange}
             className={errors.description ? 'error' : ''}
             placeholder="What's on your mind? (min 10 characters)"
-            rows="3"
+            rows="4"
           />
           {errors.description && <span className="error-message">{errors.description}</span>}
         </div>
@@ -218,10 +220,25 @@ const CreatePost = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">Share Post</button>
+        <div className="edit-post-actions">
+          <button 
+            type="button" 
+            className="btn btn-secondary"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
+          <button 
+            type="submit" 
+            className="btn btn-primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Saving' : 'Save Changes'}
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default CreatePost;
+export default EditPost;

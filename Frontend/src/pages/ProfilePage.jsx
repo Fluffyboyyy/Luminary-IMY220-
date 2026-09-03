@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Profile from './Profile';
-import EditProfile from './EditProfile';
-import PostList from './PostList';
-import CreatePost from './CreatePost';
-import FriendList from './FriendList';  
+import Profile from '../components/profile/Profile';
+import EditProfile from '../components/profile/EditProfile';
+import PostList from '../components/profile/PostList';
+import CreatePost from '../components/profile/CreatePost';
+import FriendList from '../components/profile/FriendList';
 import './ProfilePage.css';
 
 const ProfilePage = () => {
