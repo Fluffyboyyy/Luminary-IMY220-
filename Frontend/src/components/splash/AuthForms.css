@@ -39,6 +39,11 @@
   color: #6B6B7B;
 }
 
+.form-group input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 .btn-block {
   width: 100%;
   padding: 14px;
@@ -47,6 +52,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.btn-block:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 .form-error {
@@ -77,4 +87,9 @@
 
 .link-btn:hover {
   text-decoration: underline;
+}
+
+.link-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

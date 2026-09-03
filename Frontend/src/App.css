@@ -1,3 +1,7 @@
+/* ========================================
+   App Layout
+   ======================================== */
+
 .app {
   display: flex;
   flex-direction: column;
@@ -5,13 +9,19 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  background: var(--color-background, #F5F5FA);
 }
 
 .app-main {
   flex: 1;
   width: 100%;
-  margin: 0;
-  padding: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-md, 1rem);
+}
+
+.app-with-nav .app-main {
+  padding-top: var(--spacing-md, 1rem);
 }
 
 .app-loading {
@@ -33,4 +43,20 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: var(--spacing-sm, 0.5rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-main {
+    padding: 0;
+  }
 }

@@ -61,7 +61,11 @@ const SplashPage = () => {
                 </button>
               </div>
               <div className="auth-form-container">
-                {showLogin ? <LoginForm /> : <RegisterForm />}
+                {showLogin ? (
+                  <LoginForm onSwitchToRegister={() => setShowLogin(false)} />
+                ) : (
+                  <RegisterForm onSwitchToLogin={() => setShowLogin(true)} />
+                )}
               </div>
             </div>
           </section>

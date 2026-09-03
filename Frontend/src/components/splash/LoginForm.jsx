@@ -1,33 +1,63 @@
 import React, { useState } from 'react';
 import './AuthForms.css';
 
-const LoginForm = () => {
+const LoginForm = ({ onLogin, onSwitchToRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setIsLoading(true);
 
     // Client-side validation
     if (!email) {
       setError('Email is required');
+      setIsLoading(false);
       return;
     }
     if (!email.includes('@')) {
       setError('Please enter a valid email address');
+      setIsLoading(false);
       return;
     }
     if (!password) {
       setError('Password is required');
+      setIsLoading(false);
       return;
     }
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setIsLoading(false);
       return;
     }
 
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        if (onLogin) onLogin(data.user);
+        window.location.href = '/home';
+      } else {
+        setError(data.message || 'Login failed. Please try again.');
+      }
+    } catch (err) {
+      setError('Unable to connect to server. Please make sure the backend is running.');
+      console.error('Login error:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,6 +71,7 @@ const LoginForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           required
+          disabled={isLoading}
         />
       </div>
 
@@ -54,6 +85,7 @@ const LoginForm = () => {
           placeholder="Enter your password"
           required
           minLength="6"
+          disabled={isLoading}
         />
       </div>
 
@@ -62,9 +94,9 @@ const LoginForm = () => {
       <button 
         type="submit" 
         className="btn btn-primary btn-block"
-  
+        disabled={isLoading}
       >
-        {'Sign In'}
+        {isLoading ? 'Signing In...' : 'Sign In'}
       </button>
 
       <p className="form-footer-text">
@@ -72,9 +104,8 @@ const LoginForm = () => {
         <button 
           type="button" 
           className="link-btn"
-          onClick={() => {
-            document.querySelector('.auth-tab:last-child')?.click();
-          }}
+          onClick={onSwitchToRegister}
+          disabled={isLoading}
         >
           Sign Up
         </button>
