@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom'; 
 import './FeedPage.css';
 
 const FeedPage = () => {
@@ -10,6 +11,7 @@ const FeedPage = () => {
       id: 1,
       user: 'Alice Johnson',
       username: 'alicej',
+      userId: 1, 
       avatar: 'https://ui-avatars.com/api/?name=Alice+Johnson&background=6C63FF&color=fff&size=40',
       image: 'https://picsum.photos/seed/1/600/350',
       description: 'Beautiful sunset at the beach! #sunset #beach',
@@ -22,6 +24,7 @@ const FeedPage = () => {
       id: 2,
       user: 'Bob Smith',
       username: 'bobs',
+      userId: 2,
       avatar: 'https://ui-avatars.com/api/?name=Bob+Smith&background=FF6584&color=fff&size=40',
       image: 'https://picsum.photos/seed/2/600/350',
       description: 'New art project in progress #art #creative',
@@ -34,6 +37,7 @@ const FeedPage = () => {
       id: 3,
       user: 'Carol Davis',
       username: 'carold',
+      userId: 3,
       avatar: 'https://ui-avatars.com/api/?name=Carol+Davis&background=00D4AA&color=fff&size=40',
       image: 'https://picsum.photos/seed/3/600/350',
       description: 'Coffee and coding #coding #developer',
@@ -89,7 +93,7 @@ const FeedPage = () => {
         {mockPosts.map((post) => (
           <article key={post.id} className="post-card">
             <div className="post-header">
-              <div className="post-user">
+              <Link to={`/profile/${post.userId}`} className="post-user">
                 <img 
                   src={post.avatar} 
                   alt={post.user}
@@ -99,20 +103,24 @@ const FeedPage = () => {
                   <span className="post-username">{post.user}</span>
                   <span className="post-userhandle">@{post.username}</span>
                 </div>
-              </div>
+              </Link>
               <span className="post-time">{post.createdAt}</span>
             </div>
 
-            <div className="post-image-wrapper">
-              <img 
-                src={post.image} 
-                alt={post.description}
-                className="post-image"
-              />
-            </div>
+            <Link to={`/post/${post.id}`} className="post-image-link">
+              <div className="post-image-wrapper">
+                <img 
+                  src={post.image} 
+                  alt={post.description}
+                  className="post-image"
+                />
+              </div>
+            </Link>
 
             <div className="post-content">
-              <p className="post-description">{post.description}</p>
+              <Link to={`/post/${post.id}`} className="post-description-link">
+                <p className="post-description">{post.description}</p>
+              </Link>
               <div className="post-hashtags">
                 {post.hashtags.map((tag, index) => (
                   <span key={index} className="hashtag">{tag}</span>
