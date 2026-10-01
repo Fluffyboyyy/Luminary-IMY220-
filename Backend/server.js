@@ -1,9 +1,10 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+
 import express from 'express';
 import session from 'express-session';
 import cors from 'cors';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 import { connectDB } from './config/db.js';
 import { attachUser } from './middleware/auth.js';

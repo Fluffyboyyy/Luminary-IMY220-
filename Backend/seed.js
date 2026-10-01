@@ -1,6 +1,9 @@
-require('dotenv').config();
-const { connectDB, getDB } = require('./config/db');
-const { ObjectId } = require('mongodb');
+import dotenv from 'dotenv';
+dotenv.config();
+
+
+import { connectDB, getDB} from './config/db.js';
+import { ObjectId } from 'mongodb';
 
 async function seed() {
   await connectDB();
