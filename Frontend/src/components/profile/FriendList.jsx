@@ -36,14 +36,16 @@ const FriendList = ({ friends, isOwnProfile }) => {
       <div className="grid grid-cols-[repeat(auto-fill,minmax(55px,1fr))] md:grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-1 md:gap-4">
         {displayedFriends.map((friend) => (
           <Link
-            to={`/profile/${friend.id}`}
-            key={friend.id}
+            to={`/profile/${friend._id}`}
+            key={friend._id}
             className="friend-item flex flex-col items-center p-1 md:p-2"
           >
             <img
               src={
-                friend.avatar ||
-                `https://ui-avatars.com/api/?name=${friend.name}&background=6C63FF&color=fff&size=50`
+                friend.profileImage ||
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                  friend.name
+                )}&background=6C63FF&color=fff&size=50`
               }
               alt={friend.name}
               className="friend-avatar w-[45px] h-[45px] md:w-[60px] md:h-[60px] mb-1"

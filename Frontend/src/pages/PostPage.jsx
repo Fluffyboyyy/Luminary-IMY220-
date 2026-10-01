@@ -1,148 +1,90 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import PostDetails from '../components/post/PostDetails';
 import CommentSection from '../components/post/CommentSection';
 import EditPost from '../components/post/EditPost';
+import { api } from '../api';
 import './PostPage.css';
 
 const PostPage = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || '{"id":1,"name":"Alice Johnson","username":"alicej"}');
-    setCurrentUser(user);
+    api('/api/auth/me')
+      .then(setCurrentUser)
+      .catch(() => setCurrentUser(null));
+  }, []);
 
-    const fetchPost = async () => {
-      try {
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        const mockPost = {
-          id: parseInt(postId) || 1,
-          user: {
-            id: 1,
-            name: 'Alice Johnson',
-            username: 'alicej',
-            avatar: 'https://ui-avatars.com/api/?name=Alice+Johnson&background=6C63FF&color=fff&size=60',
-          },
-          image: 'https://picsum.photos/seed/1/800/600',
-          description: 'Beautiful sunset at the beach! This was taken during my trip to Bali last summer.',
-          hashtags: ['#sunset', '#beach', '#nature'],
-          createdAt: new Date('2026-08-30T14:30:00'),
-          location: 'Bali, Indonesia',
-          camera: 'Sony A7III',
-          likes: 42,
-          isLiked: false,
-          isReported: false
-        };
-
-        setPost(mockPost);
-        setLikesCount(mockPost.likes);
-        
-        const mockComments = [
-          {
-            id: 1,
-            user: {
-              id: 2,
-              name: 'Bob Smith',
-              username: 'bobs',
-              avatar: 'https://ui-avatars.com/api/?name=Bob+Smith&background=FF6584&color=fff&size=40'
-            },
-            text: 'Amazing shot! The colors are incredible',
-            createdAt: new Date('2026-08-30T15:00:00'),
-            likes: 5,
-            isLiked: false
-          },
-          {
-            id: 2,
-            user: {
-              id: 3,
-              name: 'Carol Davis',
-              username: 'carold',
-              avatar: 'https://ui-avatars.com/api/?name=Carol+Davis&background=00D4AA&color=fff&size=40'
-            },
-            text: 'Where exactly in Bali is this? I\'d love to visit!',
-            createdAt: new Date('2026-08-30T15:30:00'),
-            likes: 3,
-            isLiked: false
-          }
-        ];
-        
-        setComments(mockComments);
-        setIsLoading(false);
-      } catch (err) {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPost();
+  const fetchPost = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const data = await api(`/api/posts/${postId}`);
+      setPost(data.post);
+    } catch (err) {
+      setError(err.message || 'Failed to load post');
+    } finally {
+      setIsLoading(false);
+    }
   }, [postId]);
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
-  };
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
-  const handleLikeComment = (commentId) => {
-    setComments(prevComments => 
-      prevComments.map(comment => {
-        if (comment.id === commentId) {
-          const isLiked = !comment.isLiked;
-          return {
-            ...comment,
-            isLiked: isLiked,
-            likes: isLiked ? (comment.likes || 0) + 1 : (comment.likes || 0) - 1
-          };
-        }
-        return comment;
-      })
-    );
-  };
-
-  const handleComment = (commentText) => {
-    const newComment = {
-      id: Date.now(),
-      user: {
-        id: currentUser.id || 0,
-        name: currentUser.name || 'You',
-        username: currentUser.username || 'you',
-        avatar: `https://ui-avatars.com/api/?name=${currentUser.name || 'You'}&background=6C63FF&color=fff&size=40`
-      },
-      text: commentText,
-      createdAt: new Date(),
-      likes: 0,
-      isLiked: false
-    };
-    setComments([newComment, ...comments]);
-  };
-
-  const handleDeleteComment = (commentId) => {
-    if (window.confirm('Are you sure you want to delete this comment?')) {
-      setComments(comments.filter(comment => comment.id !== commentId));
+  const handleComment = async (commentText) => {
+    try {
+      await api(`/api/posts/${postId}/comments`, {
+        method: 'POST',
+        body: JSON.stringify({ text: commentText }),
+      });
+      await fetchPost();
+    } catch (err) {
+      alert(err.message);
     }
   };
 
-  const handleSaveEdit = (updatedData) => {
-    setPost({
-      ...post,
-      image: updatedData.image,
-      description: updatedData.description,
-      location: updatedData.location
-    });
-    setIsEditing(false);
-    alert('Post updated successfully!');
+  const handleDeleteComment = async (commentId) => {
+    if (!window.confirm('Delete this comment?')) return;
+    try {
+      await api(`/api/posts/${postId}/comments/${commentId}`, {
+        method: 'DELETE',
+      });
+      await fetchPost();
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
-  const handleDeletePost = () => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+  const handleSaveEdit = async (updatedData) => {
+    try {
+      await api(`/api/posts/${postId}`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          description: updatedData.description,
+          hashtags: updatedData.hashtags || [],
+        }),
+      });
+      setIsEditing(false);
+      await fetchPost();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!window.confirm('Delete this post permanently?')) return;
+    try {
+      await api(`/api/posts/${postId}`, { method: 'DELETE' });
       navigate('/home');
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -157,17 +99,17 @@ const PostPage = () => {
     );
   }
 
-  if (!post) {
+  if (error || !post) {
     return (
       <div className="post-page flex flex-col items-center justify-center min-h-[400px] text-center gap-4 p-8">
         <span className="not-found-icon">🔍</span>
         <h2 className="text-xl md:text-2xl">Post Not Found</h2>
         <p className="text-[color:var(--color-gray)]">
-          The post you're looking for doesn't exist.
+          {error || "The post you're looking for doesn't exist."}
         </p>
         <Link
           to="/home"
-          className="btn btn-primary px-5 py-2.5 text-sm rounded-full bg-[color:var(--color-primary)] text-white"
+          className="btn btn-primary px-5 py-2.5 text-sm rounded-full"
         >
           Go Home
         </Link>
@@ -175,7 +117,7 @@ const PostPage = () => {
     );
   }
 
-  const isOwner = currentUser?.id === post.user.id;
+  const isOwner = currentUser?._id === post.owner?._id?.toString();
 
   if (isEditing) {
     return (
@@ -207,20 +149,30 @@ const PostPage = () => {
         <PostDetails
           post={post}
           isOwner={isOwner}
-          isLiked={isLiked}
-          likesCount={likesCount}
-          onLike={handleLike}
+          currentUser={currentUser}
           onEdit={() => setIsEditing(true)}
           onDelete={handleDeletePost}
-          currentUser={currentUser}
         />
 
         <CommentSection
-          comments={comments}
+          postId={postId}
+          comments={post.comments || []}
           onAddComment={handleComment}
           onDeleteComment={handleDeleteComment}
-          onLikeComment={handleLikeComment}
           currentUser={currentUser}
+          onCommentsChange={(updater) =>
+            setPost((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    comments:
+                      typeof updater === 'function'
+                        ? updater(prev.comments || [])
+                        : updater,
+                  }
+                : prev
+            )
+          }
         />
       </div>
     </div>

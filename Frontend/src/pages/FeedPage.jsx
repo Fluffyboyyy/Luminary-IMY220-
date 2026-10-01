@@ -1,56 +1,45 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { api } from '../api';
 import './FeedPage.css';
 
 const FeedPage = () => {
   const [feedType, setFeedType] = useState('local');
   const [searchTerm, setSearchTerm] = useState('');
+  const [feed, setFeed] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const mockPosts = [
-    {
-      id: 1,
-      user: 'Alice Johnson',
-      username: 'alicej',
-      userId: 1, 
-      avatar: 'https://ui-avatars.com/api/?name=Alice+Johnson&background=6C63FF&color=fff&size=40',
-      image: 'https://picsum.photos/seed/1/600/350',
-      description: 'Beautiful sunset at the beach! #sunset #beach',
-      hashtags: ['#sunset', '#beach'],
-      createdAt: '2 hours ago',
-      likes: 42,
-      comments: 5
-    },
-    {
-      id: 2,
-      user: 'Bob Smith',
-      username: 'bobs',
-      userId: 2,
-      avatar: 'https://ui-avatars.com/api/?name=Bob+Smith&background=FF6584&color=fff&size=40',
-      image: 'https://picsum.photos/seed/2/600/350',
-      description: 'New art project in progress #art #creative',
-      hashtags: ['#art', '#creative'],
-      createdAt: '5 hours ago',
-      likes: 28,
-      comments: 3
-    },
-    {
-      id: 3,
-      user: 'Carol Davis',
-      username: 'carold',
-      userId: 3,
-      avatar: 'https://ui-avatars.com/api/?name=Carol+Davis&background=00D4AA&color=fff&size=40',
-      image: 'https://picsum.photos/seed/3/600/350',
-      description: 'Coffee and coding #coding #developer',
-      hashtags: ['#coding', '#developer'],
-      createdAt: '1 day ago',
-      likes: 56,
-      comments: 8
-    }
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    const fetchFeed = async () => {
+      setIsLoading(true);
+      setError('');
+      try {
+        const data = await api(`/api/activity/${feedType}`);
+        if (!cancelled) setFeed(data.feed || []);
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load feed');
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    };
+    fetchFeed();
+    return () => { cancelled = true; };
+  }, [feedType]);
 
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const filteredFeed = searchTerm
+    ? feed.filter((item) => {
+        const q = searchTerm.toLowerCase();
+        const post = item.post;
+        return (
+          post?.description?.toLowerCase().includes(q) ||
+          post?.hashtags?.some((t) => t.includes(q)) ||
+          item.user?.name?.toLowerCase().includes(q) ||
+          item.user?.username?.toLowerCase().includes(q)
+        );
+      })
+    : feed;
 
   return (
     <div className="max-w-[800px] mx-auto p-2 md:p-8">
@@ -69,7 +58,7 @@ const FeedPage = () => {
           className="search-input w-full py-2 md:py-3 pl-10 md:pl-12 pr-4 text-sm md:text-base"
           placeholder="Search posts, users, hashtags"
           value={searchTerm}
-          onChange={handleSearch}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <span className="search-icon left-4 text-base md:text-lg">🔍</span>
       </div>
@@ -93,67 +82,117 @@ const FeedPage = () => {
         </button>
       </div>
 
+      {isLoading && (
+        <p className="text-center text-[color:var(--color-gray)] py-8">
+          Loading feed...
+        </p>
+      )}
+
+      {error && (
+        <p className="text-center text-[color:var(--color-secondary)] py-8">
+          {error}
+        </p>
+      )}
+
+      {!isLoading && !error && filteredFeed.length === 0 && (
+        <p className="text-center text-[color:var(--color-gray)] py-8">
+          {searchTerm ? 'No posts match your search.' : 'No activity yet.'}
+        </p>
+      )}
+
       <div className="flex flex-col gap-4 md:gap-8">
-        {mockPosts.map((post) => (
-          <article key={post.id} className="post-card">
-            <div className="flex items-center justify-between p-3 md:p-5">
-              <Link
-                to={`/profile/${post.userId}`}
-                className="post-user flex items-center gap-2 md:gap-3 flex-1"
+        {filteredFeed.map((item) => {
+          const post = item.post;
+          if (!post) return null;
+
+          if (post.isHidden) {
+            return (
+              <article
+                key={item._id}
+                className="post-card p-4 text-center"
               >
-                <img
-                  src={post.avatar}
-                  alt={post.user}
-                  className="post-avatar w-8 h-8 md:w-10 md:h-10"
-                />
-                <div className="flex flex-col">
-                  <span className="post-username text-sm md:text-[0.95rem]">
-                    {post.user}
-                  </span>
-                  <span className="post-userhandle text-xs md:text-[0.8rem]">
-                    @{post.username}
-                  </span>
+                <p className="text-[color:var(--color-gray)]">
+                  ⚠️ This post has been reported and is hidden.
+                </p>
+              </article>
+            );
+          }
+
+          const owner = post.owner || item.user;
+          const createdLabel = new Date(item.createdAt).toLocaleString();
+
+          return (
+            <article key={item._id} className="post-card">
+              <div className="flex items-center justify-between p-3 md:p-5">
+                <Link
+                  to={`/profile/${owner._id}`}
+                  className="post-user flex items-center gap-2 md:gap-3 flex-1"
+                >
+                  <img
+                    src={
+                      owner.profileImage ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        owner.name
+                      )}&background=6C63FF&color=fff&size=40`
+                    }
+                    alt={owner.name}
+                    className="post-avatar w-8 h-8 md:w-10 md:h-10"
+                  />
+                  <div className="flex flex-col">
+                    <span className="post-username text-sm md:text-[0.95rem]">
+                      {owner.name}
+                    </span>
+                    <span className="post-userhandle text-xs md:text-[0.8rem]">
+                      @{owner.username}
+                    </span>
+                  </div>
+                </Link>
+                <span className="post-time text-xs md:text-[0.8rem]">
+                  {createdLabel}
+                </span>
+              </div>
+
+              <Link to={`/post/${post._id}`} className="post-image-link">
+                <div className="post-image-wrapper">
+                  <img
+                    src={post.image}
+                    alt={post.description}
+                    className="post-image"
+                  />
                 </div>
               </Link>
-              <span className="post-time text-xs md:text-[0.8rem]">
-                {post.createdAt}
-              </span>
-            </div>
 
-            <Link to={`/post/${post.id}`} className="post-image-link">
-              <div className="post-image-wrapper">
-                <img
-                  src={post.image}
-                  alt={post.description}
-                  className="post-image"
-                />
-              </div>
-            </Link>
-
-            <div className="p-3 md:p-5">
-              <Link to={`/post/${post.id}`} className="post-description-link">
-                <p className="post-description text-sm md:text-[0.95rem] leading-relaxed mb-2">
-                  {post.description}
-                </p>
-              </Link>
-              <div className="flex flex-wrap gap-2 mb-3">
-                {post.hashtags.map((tag, index) => (
-                  <span key={index} className="hashtag text-sm md:text-[0.9rem]">
-                    {tag}
+              <div className="p-3 md:p-5">
+                <Link
+                  to={`/post/${post._id}`}
+                  className="post-description-link"
+                >
+                  <p className="post-description text-sm md:text-[0.95rem] leading-relaxed mb-2">
+                    {post.description}
+                  </p>
+                </Link>
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {post.hashtags?.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="hashtag text-sm md:text-[0.9rem]"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+                <div className="post-stats flex gap-4 md:gap-6 pt-3">
+                  <span className="post-stat text-xs md:text-[0.9rem]">
+                    ❤️ {Array.isArray(post.likes) ? post.likes.length : post.likes || 0}
                   </span>
-                ))}
+                  <span className="post-stat text-xs md:text-[0.9rem]">
+                    💬 {post.comments?.length || 0}
+                  </span>
+                </div>
               </div>
-              <div className="post-stats flex gap-4 md:gap-6 pt-3">
-                <span className="post-stat text-xs md:text-[0.9rem]">
-                  ❤️ {post.likes}
-                </span>
-                <span className="post-stat text-xs md:text-[0.9rem]">
-                  💬 {post.comments}
-                </span>
-              </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </div>
     </div>
   );

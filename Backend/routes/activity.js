@@ -3,7 +3,7 @@ const router = express.Router();
 const { getDB } = require('../config/db');
 const { requireAuth } = require('../middleware/auth');
 
-async function buildFeed(db, activities) {
+async function buildFeed(db, activities, req) {
   const userIds = [...new Set(activities.map(a => a.user.toString()))];
   const postIds = activities.filter(a => a.post).map(a => a.post);
   const albumIds = activities.filter(a => a.album).map(a => a.album);
@@ -34,15 +34,19 @@ async function buildFeed(db, activities) {
     const post = a.post ? posts.find(p => p._id.toString() === a.post.toString()) : null;
     const album = a.album ? albums.find(al => al._id.toString() === a.album.toString()) : null;
 
-    // Populate post owner + comments users
     let populatedPost = null;
     if (post) {
       const owner = users.find(u => u._id.toString() === post.owner.toString()) || null;
+      const postLikes = post.likes || [];
       populatedPost = {
         ...post,
         owner,
+        likes: postLikes.length,
+        isLiked: req.user
+          ? postLikes.some(id => id.toString() === req.user._id.toString())
+          : false,
         reportCount: reportMap[post._id.toString()] || 0,
-        isHidden: (reportMap[post._id.toString()] || 0) > 2
+        isHidden: (reportMap[post._id.toString()] || 0) > 2,
       };
     }
 
@@ -90,7 +94,7 @@ router.get('/local', requireAuth, async (req, res) => {
       .limit(50)
       .toArray();
 
-    const feed = await buildFeed(db, activities);
+    const feed = await buildFeed(db, activities, req);
     res.json({ feed });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -107,7 +111,7 @@ router.get('/global', requireAuth, async (req, res) => {
       .limit(50)
       .toArray();
 
-    const feed = await buildFeed(db, activities);
+    const feed = await buildFeed(db, activities, req);
     res.json({ feed });
   } catch (err) {
     res.status(500).json({ message: err.message });

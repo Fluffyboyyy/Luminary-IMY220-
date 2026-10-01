@@ -67,21 +67,19 @@ const RegisterForm = ({ onRegister, onSwitchToLogin }) => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',   // <-- ADD THIS
         body: JSON.stringify({
           name: formData.name,
           username: formData.username,
           email: formData.email,
-          password: formData.password
+          password: formData.password,
         }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (response.ok && data.user) {
         if (onRegister) onRegister(data.user);
         window.location.href = '/home';
       } else {
@@ -95,7 +93,7 @@ const RegisterForm = ({ onRegister, onSwitchToLogin }) => {
     }
   };
 
-    return (
+  return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-1">
         <label htmlFor="name">Full Name</label>

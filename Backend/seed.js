@@ -91,9 +91,11 @@ async function seed() {
           _id: new ObjectId(),
           user: user2Id,
           text: 'Welcome!',
-          createdAt: new Date()
+          createdAt: new Date(),
+          likes: [user2Id]
         }
       ],
+      likes: [],
       createdAt: new Date(Date.now() - 1000 * 60 * 60),
       updatedAt: new Date()
     },
@@ -105,6 +107,7 @@ async function seed() {
       hashtags: ['nature', 'sunset'],
       albums: [],
       comments: [],
+      likes: [],
       createdAt: new Date(Date.now() - 1000 * 60 * 30),
       updatedAt: new Date()
     },
@@ -116,6 +119,7 @@ async function seed() {
       hashtags: ['travel', 'mountains'],
       albums: [],
       comments: [],
+      likes: [],
       createdAt: new Date(Date.now() - 1000 * 60 * 10),
       updatedAt: new Date()
     }

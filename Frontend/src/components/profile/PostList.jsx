@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './PostList.css';
 
 const PostList = ({ posts, isOwnProfile }) => {
-  if (posts.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
       <div className="post-list-empty flex flex-col items-center justify-center min-h-[200px] p-4 md:p-8">
         <span className="empty-icon mb-4">📷</span>
@@ -28,8 +28,8 @@ const PostList = ({ posts, isOwnProfile }) => {
       <div className="flex flex-col gap-2 md:gap-4">
         {posts.map((post) => (
           <Link
-            to={`/post/${post.id}`}
-            key={post.id}
+            to={`/post/${post._id}`}
+            key={post._id}
             className="post-item flex flex-col md:flex-row gap-2 md:gap-4 p-2 md:p-4"
           >
             <div className="post-item-image-wrapper w-full h-[150px] md:w-[120px] md:h-[120px] flex-shrink-0">
@@ -46,14 +46,14 @@ const PostList = ({ posts, isOwnProfile }) => {
               </p>
               <div className="flex gap-2 md:gap-4">
                 <span className="post-stat text-xs md:text-[0.85rem]">
-                  ❤️ {post.likes}
+                  ❤️ {Array.isArray(post.likes) ? post.likes.length : post.likes || 0}
                 </span>
                 <span className="post-stat text-xs md:text-[0.85rem]">
-                  💬 {post.comments}
+                  💬 {Array.isArray(post.comments) ? post.comments.length : post.comments || 0}
                 </span>
               </div>
               <span className="post-item-date text-[0.7rem] md:text-[0.8rem]">
-                {post.createdAt.toLocaleDateString()}
+                {new Date(post.createdAt).toLocaleDateString()}
               </span>
             </div>
           </Link>

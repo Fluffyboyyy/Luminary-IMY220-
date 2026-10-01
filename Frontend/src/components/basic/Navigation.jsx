@@ -7,6 +7,14 @@ const Navigation = () => {
   const isActive = (path) =>
     location.pathname === path || location.pathname.startsWith(path + '/');
 
+  const handleLogout = async () => {
+  await fetch('http://localhost:5000/api/auth/logout', {
+    method: 'POST',
+    credentials: 'include',
+  });
+  window.location.href = '/';
+};
+
   return (
     <nav className="main-nav">
       <div className="max-w-[1200px] mx-auto px-4 md:px-8 h-12 md:h-14 lg:h-16 flex items-center justify-between">
@@ -40,6 +48,9 @@ const Navigation = () => {
           >
             + New Post
           </Link>
+          <button onClick={handleLogout} className="nav-link ...">
+            Log out
+          </button>
         </div>
       </div>
     </nav>

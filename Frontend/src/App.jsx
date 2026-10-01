@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import PostPage from './pages/PostPage';
 import CreatePost from './components/profile/CreatePost';
 import Navigation from './components/basic/Navigation';
+import ProtectedRoute from './components/basic/ProtectedRoute';
 import './App.css';
 
 function App() {
@@ -14,20 +15,23 @@ function App() {
       <div className="app">
         <Routes>
           <Route path="/" element={<SplashPage />} />
-          <Route path="/*" element={
-            <>
-              <Navigation />
-              <main className="app-main">
-                <Routes>
-                  <Route path="/home" element={<FeedPage />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/profile/:userId" element={<ProfilePage />} />
-                  <Route path="/post/:postId" element={<PostPage />} />
-                  <Route path="/create" element={<CreatePost />} />
-                </Routes>
-              </main>
-            </>
-          } />
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <Navigation />
+                <main className="app-main">
+                  <Routes>
+                    <Route path="/home" element={<FeedPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/profile/:userId" element={<ProfilePage />} />
+                    <Route path="/post/:postId" element={<PostPage />} />
+                    <Route path="/create" element={<CreatePost />} />
+                  </Routes>
+                </main>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </Router>
