@@ -30,6 +30,9 @@ connectDB();
 app.use('/api/auth', require('./routes/auth'))
 app.use('/api/users', require('./routes/users'))
 app.use('/api/posts', require('./routes/posts'))
+app.use('/api/albums', require('./routes/albums'))
+app.use('/api/friends', require('./routes/friends'))
+app.use('/api/activity', require('./routes/activity'))
 
 
 
