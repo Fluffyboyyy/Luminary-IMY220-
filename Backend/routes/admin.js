@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
-const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 router.use(requireAuth, requireAdmin);
 
@@ -172,4 +173,4 @@ router.delete('/reasons/:id', async (req, res) => {
   } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-module.exports = router;
+export default router;

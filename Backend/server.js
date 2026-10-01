@@ -1,11 +1,24 @@
-const express = require('express');
-const session = require('express-session');
-const cors = require('cors');
+import dotenv from 'dotenv';
+dotenv.config();
 
-require('dotenv').config();
 
-const { connectDB } = require('./config/db');
-const { attachUser } = require('./middleware/auth');
+import express from 'express';
+import session from 'express-session';
+import cors from 'cors';
+
+import { connectDB } from './config/db.js';
+import { attachUser } from './middleware/auth.js';
+
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/users.js';
+import postRoutes from './routes/posts.js';
+import albumRoutes from './routes/albums.js';
+import friendRoutes from './routes/friends.js';
+import activityRoutes from './routes/activity.js';
+import adminRoutes from './routes/admin.js';
+import reportRoutes from './routes/reports.js';
+
+
 
 const app = express();
 
@@ -30,16 +43,14 @@ app.use(attachUser);
 
 connectDB();
 
-app.use('/api/auth', require('./routes/auth'))
-app.use('/api/users', require('./routes/users'))
-app.use('/api/posts', require('./routes/posts'))
-app.use('/api/albums', require('./routes/albums'))
-app.use('/api/friends', require('./routes/friends'))
-app.use('/api/activity', require('./routes/activity'))
-app.use('/api/admin', require('./routes/admin'))
-app.use('/api/reports', require('./routes/reports'))
-
-
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+app.use('/api/albums', albumRoutes);
+app.use('/api/friends', friendRoutes);
+app.use('/api/activity', activityRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/reports', reportRoutes);
 
 const PORT = 5000;
 app.listen(PORT, () => {

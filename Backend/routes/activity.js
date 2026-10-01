@@ -1,7 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { requireAuth } from '../middleware/auth.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
-const { requireAuth } = require('../middleware/auth');
 
 async function buildFeed(db, activities, req) {
   const userIds = [...new Set(activities.map(a => a.user.toString()))];
@@ -9,7 +11,7 @@ async function buildFeed(db, activities, req) {
   const albumIds = activities.filter(a => a.album).map(a => a.album);
 
   const users = await db.collection('users')
-    .find({ _id: { $in: userIds.map(id => new (require('mongodb').ObjectId)(id)) } },
+    .find({ _id: { $in: userIds.map(id => new ObjectId(id)) } },
       { projection: { password: 0 } })
     .toArray();
 
@@ -118,4 +120,4 @@ router.get('/global', requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

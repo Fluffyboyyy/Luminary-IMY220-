@@ -1,5 +1,5 @@
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
+import { getDB } from '../config/db.js';
+import { ObjectId } from 'mongodb';
 
 // Attach req.user if session exists
 async function attachUser(req, res, next) {
@@ -34,4 +34,4 @@ function requireAdmin(req, res, next) {
   next();
 }
 
-module.exports = { attachUser, requireAuth, requireAdmin };
+export { attachUser, requireAuth, requireAdmin };

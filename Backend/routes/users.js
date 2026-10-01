@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { requireAuth } from '../middleware/auth.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
-const { requireAuth } = require('../middleware/auth');
 
 // GET /api/users/:id - View profile (own or other)
 router.get('/:id', async (req, res) => {
@@ -157,4 +158,4 @@ router.delete('/me', requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

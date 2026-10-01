@@ -5,7 +5,7 @@ import EditProfile from '../components/profile/EditProfile';
 import PostList from '../components/profile/PostList';
 import CreatePost from '../components/profile/CreatePost';
 import FriendList from '../components/profile/FriendList';
-import AlbumList from '../components/albums/Albumlist';
+import AlbumList from '../components/albums/AlbumList';
 import FriendButton from '../components/profile/FriendButton';
 import { api } from '../api';
 
