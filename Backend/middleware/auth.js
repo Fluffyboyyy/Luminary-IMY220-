@@ -12,9 +12,26 @@ async function attachUser(req, res, next) {
       );
       if (user) req.user = user;
     } catch (err) {
+      // Ignore - user stays undefined
     }
   }
   next();
 }
 
-module.exports = { attachUser };
+// Require login
+function requireAuth(req, res, next) {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+  next();
+}
+
+// Require admin
+function requireAdmin(req, res, next) {
+  if (!req.user || !req.user.isAdmin) {
+    return res.status(403).json({ message: 'Admin access required' });
+  }
+  next();
+}
+
+module.exports = { attachUser, requireAuth, requireAdmin };
