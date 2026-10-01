@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { requireAuth } from '../middleware/auth.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
-const { requireAuth } = require('../middleware/auth');
 
 // GET /api/reports/reasons
 router.get('/reasons', async (req, res) => {
@@ -53,4 +54,4 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

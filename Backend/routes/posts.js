@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ObjectId } from 'mongodb';
+import { getDB } from '../config/db.js';
+import { requireAuth } from '../middleware/auth.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
-const { ObjectId } = require('mongodb');
-const { requireAuth } = require('../middleware/auth');
 
 // Helper: parse hashtags
 function parseHashtags(hashtags) {
@@ -253,7 +254,6 @@ router.post('/:id/like', requireAuth, async (req, res) => {
   }
 });
 
-
 // POST /api/posts/:id/comments/:commentId/like
 router.post('/:id/comments/:commentId/like', requireAuth, async (req, res) => {
   try {
@@ -296,4 +296,4 @@ router.post('/:id/comments/:commentId/like', requireAuth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

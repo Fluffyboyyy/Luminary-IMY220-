@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { api } from '../../api';
 import AlbumCard from './AlbumCard';
-import AlbumForm from './Albumform';
+import AlbumForm from './AlbumForm';
 import './AlbumList.css';
 
 const AlbumList = ({ albums, isOwnProfile, onAlbumsChange }) => {

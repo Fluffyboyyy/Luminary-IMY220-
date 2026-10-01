@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import { getDB } from '../config/db.js';
+
 const router = express.Router();
-const { getDB } = require('../config/db');
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
@@ -91,4 +92,4 @@ router.get('/me', (req, res) => {
   res.json(req.user);
 });
 
-module.exports = router;
+export default router;
