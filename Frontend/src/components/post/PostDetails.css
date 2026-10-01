@@ -161,3 +161,8 @@
   border-radius: 50%;
   font-weight: 700;
 }
+
+.dropdown-item.cursor-default {
+  cursor: default;
+  pointer-events: none;
+}

@@ -5,6 +5,8 @@ import EditProfile from '../components/profile/EditProfile';
 import PostList from '../components/profile/PostList';
 import CreatePost from '../components/profile/CreatePost';
 import FriendList from '../components/profile/FriendList';
+import AlbumList from '../components/albums/Albumlist';
+import FriendButton from '../components/profile/FriendButton';
 import { api } from '../api';
 
 const ProfilePage = () => {
@@ -12,6 +14,7 @@ const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [friendsData, setFriendsData] = useState([]);
   const [postsData, setPostsData] = useState([]);
+  const [albumsData, setAlbumsData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -19,7 +22,6 @@ const ProfilePage = () => {
     setIsLoading(true);
     setError('');
     try {
-
       let targetId = userId;
       if (!targetId) {
         const me = await api('/api/auth/me');
@@ -38,6 +40,7 @@ const ProfilePage = () => {
         avatar: u.profileImage,
         isAdmin: u.isAdmin,
         postsCount: data.posts?.length || 0,
+        albumsCount: data.albums?.length || 0,
         friendsCount: data.friends?.length || 0,
         isOwnProfile: data.isOwnProfile,
         friendshipStatus: data.friendshipStatus,
@@ -46,6 +49,7 @@ const ProfilePage = () => {
 
       setPostsData(data.posts || []);
       setFriendsData(data.friends || []);
+      setAlbumsData(data.albums || []);
     } catch (err) {
       setError(err.message || 'Failed to load profile');
     } finally {
@@ -56,26 +60,6 @@ const ProfilePage = () => {
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
-
-  const handleProfileUpdate = async (updatedData) => {
-    try {
-      const res = await api('/api/users/me', {
-        method: 'PUT',
-        body: JSON.stringify(updatedData),
-      });
-      const u = res.user;
-      setProfileData((prev) => ({
-        ...prev,
-        name: u.name,
-        username: u.username,
-        email: u.email || '',
-        bio: u.bio || '',
-        avatar: u.profileImage,
-      }));
-    } catch (err) {
-      alert(err.message);
-    }
-  };
 
   if (isLoading) {
     return (
@@ -102,22 +86,60 @@ const ProfilePage = () => {
       <div className="flex flex-col gap-4 md:gap-8">
         <Profile profile={profileData} isOwnProfile={isOwnProfile} />
 
+        {/* Friend button — only when viewing someone else's profile */}
+        {!isOwnProfile && (
+          <div className="flex justify-center -mt-2 md:-mt-4">
+            <FriendButton
+              userId={profileData._id}
+              friendshipStatus={profileData.friendshipStatus}
+              onStatusChange={(newStatus) => {
+                setProfileData((prev) => ({
+                  ...prev,
+                  friendshipStatus: newStatus,
+                }));
+                if (newStatus === 'friends') {
+                  fetchProfile();
+                }
+              }}
+            />
+          </div>
+        )}
+
         {isOwnProfile && (
           <>
             <EditProfile
               profile={profileData}
-              onUpdate={handleProfileUpdate}
+              onUpdate={async (updatedData) => {
+                try {
+                  const res = await api('/api/users/me', {
+                    method: 'PUT',
+                    body: JSON.stringify(updatedData),
+                  });
+                  setProfileData((prev) => ({
+                    ...prev,
+                    name: res.user.name,
+                    username: res.user.username,
+                    bio: res.user.bio || '',
+                    avatar: res.user.profileImage,
+                  }));
+                } catch (err) {
+                  alert(err.message);
+                }
+              }}
             />
-            <CreatePost />
+            <CreatePost onCreated={fetchProfile} />
           </>
         )}
 
         {!profileData.limited && (
-          <FriendList
-            friends={friendsData}
-            isOwnProfile={isOwnProfile}
-          />
+          <FriendList friends={friendsData} isOwnProfile={isOwnProfile} />
         )}
+
+        <AlbumList
+          albums={albumsData}
+          isOwnProfile={isOwnProfile}
+          onAlbumsChange={setAlbumsData}
+        />
 
         <PostList posts={postsData} isOwnProfile={isOwnProfile} />
       </div>

@@ -1,16 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api';
 import './PostDetails.css';
+import AlbumPicker from './AlbumPicker';
 
 const PostDetails = ({ post, isOwner, currentUser, onEdit, onDelete }) => {
+  const [showAlbumPicker, setShowAlbumPicker] = useState(false);
   const [showActions, setShowActions] = useState(false);
+  const [showReportMenu, setShowReportMenu] = useState(false);
+  const [reportReasons, setReportReasons] = useState([]);
+  const [reasonsLoading, setReasonsLoading] = useState(false);
+  const [feedback, setFeedback] = useState('');
+
   const initialLikes = Array.isArray(post.likes)
     ? post.likes.length
     : post.likes || 0;
   const [likes, setLikes] = useState(initialLikes);
   const [isLiked, setIsLiked] = useState(post.isLiked || false);
   const [isLiking, setIsLiking] = useState(false);
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (!showActions) return;
+    const handleClick = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowActions(false);
+        setShowReportMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showActions]);
 
   const handleLike = async () => {
     if (!currentUser) {
@@ -36,6 +57,47 @@ const PostDetails = ({ post, isOwner, currentUser, onEdit, onDelete }) => {
     } finally {
       setIsLiking(false);
     }
+  };
+
+  const handleOpenReportMenu = async () => {
+    setShowReportMenu(true);
+    if (reportReasons.length === 0) {
+      setReasonsLoading(true);
+      try {
+        const data = await api('/api/reports/reasons');
+        setReportReasons(data.reasons || []);
+      } catch (err) {
+        alert(err.message);
+        setShowReportMenu(false);
+      } finally {
+        setReasonsLoading(false);
+      }
+    }
+  };
+
+  const handleReport = async (reasonId) => {
+    try {
+      await api('/api/reports', {
+        method: 'POST',
+        body: JSON.stringify({ postId: post._id, reasonId }),
+      });
+      setFeedback('Report submitted. Thanks for helping keep the community safe.');
+      setShowActions(false);
+      setShowReportMenu(false);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleAddToAlbum = () => {
+    setShowAlbumPicker(true);
+    setShowActions(false);
+  };
+
+  const closeAndRun = (fn) => () => {
+    setShowActions(false);
+    setShowReportMenu(false);
+    fn();
   };
 
   const formatDate = (date) =>
@@ -75,33 +137,73 @@ const PostDetails = ({ post, isOwner, currentUser, onEdit, onDelete }) => {
         </Link>
 
         {currentUser && (
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               className="post-details-action-btn text-2xl px-2 py-1"
-              onClick={() => setShowActions(!showActions)}
+              onClick={() => {
+                setShowActions((s) => !s);
+                setShowReportMenu(false);
+              }}
+              aria-label="Post actions"
             >
               ⋮
             </button>
 
             {showActions && (
-              <div className="action-dropdown min-w-[180px] p-2">
+              <div className="action-dropdown min-w-[200px] p-2">
                 {isOwner ? (
                   <>
                     <button
-                      onClick={onEdit}
+                      onClick={closeAndRun(onEdit)}
                       className="dropdown-item flex items-center gap-2 w-full px-3 py-2 text-sm"
                     >
                       Edit Post
                     </button>
                     <button
-                      onClick={onDelete}
+                      onClick={closeAndRun(handleAddToAlbum)}
+                      className="dropdown-item flex items-center gap-2 w-full px-3 py-2 text-sm"
+                    >
+                      Add to Album
+                    </button>
+                    <button
+                      onClick={closeAndRun(onDelete)}
                       className="dropdown-item danger flex items-center gap-2 w-full px-3 py-2 text-sm"
                     >
                       Delete Post
                     </button>
                   </>
+                ) : showReportMenu ? (
+                  <>
+                    <div className="dropdown-item text-xs text-[color:var(--color-gray)] px-3 py-1 cursor-default">
+                      Why are you reporting this?
+                    </div>
+                    {reasonsLoading ? (
+                      <div className="dropdown-item px-3 py-2 text-sm text-[color:var(--color-gray)]">
+                        Loading reasons...
+                      </div>
+                    ) : (
+                      reportReasons.map((reason) => (
+                        <button
+                          key={reason._id}
+                          onClick={() => handleReport(reason._id)}
+                          className="dropdown-item flex items-center gap-2 w-full px-3 py-2 text-sm"
+                        >
+                          {reason.text}
+                        </button>
+                      ))
+                    )}
+                    <button
+                      onClick={() => setShowReportMenu(false)}
+                      className="dropdown-item flex items-center gap-2 w-full px-3 py-2 text-sm text-[color:var(--color-gray)]"
+                    >
+                      ← Back
+                    </button>
+                  </>
                 ) : (
-                  <button className="dropdown-item danger flex items-center gap-2 w-full px-3 py-2 text-sm">
+                  <button
+                    onClick={handleOpenReportMenu}
+                    className="dropdown-item danger flex items-center gap-2 w-full px-3 py-2 text-sm"
+                  >
                     Report Post
                   </button>
                 )}
@@ -134,11 +236,18 @@ const PostDetails = ({ post, isOwner, currentUser, onEdit, onDelete }) => {
           </div>
         )}
 
+        {feedback && (
+          <p className="text-sm text-[color:var(--color-primary)] mb-2">
+            {feedback}
+          </p>
+        )}
+
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 py-4 border-b border-[color:var(--color-gray-light)] mb-2">
           <div className="flex items-center gap-4 md:gap-8">
             <button
-              className={`like-btn flex items-center gap-1 text-base px-2 py-1 ${isLiked ? 'liked' : ''
-                }`}
+              className={`like-btn flex items-center gap-1 text-base px-2 py-1 ${
+                isLiked ? 'liked' : ''
+              }`}
               onClick={handleLike}
               disabled={isLiking}
             >
@@ -155,6 +264,13 @@ const PostDetails = ({ post, isOwner, currentUser, onEdit, onDelete }) => {
           </span>
         </div>
       </div>
+      {showAlbumPicker && (
+        <AlbumPicker
+          postId={post._id}
+          onClose={() => setShowAlbumPicker(false)}
+          onAdded={() => setFeedback('Post added to album.')}
+        />
+      )}
     </div>
   );
 };

@@ -21,10 +21,21 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
+  text-decoration: none;
+  font-family: var(--font-primary);
 }
 
 .friend-list-toggle:hover {
   background: var(--color-gray-light);
+}
+
+.friend-list-toggle-alert {
+  background: var(--color-secondary);
+  color: var(--color-white) !important;
+}
+
+.friend-list-toggle-alert:hover {
+  background: #e04e6a;
 }
 
 .friend-item {

@@ -48,7 +48,7 @@ const Navigation = () => {
           >
             + New Post
           </Link>
-          <button onClick={handleLogout} className="nav-link ...">
+          <button onClick={handleLogout} className="nav-link text-xs md:text-sm rounded-full px-3 py-1.5 md:px-4 md:py-2">
             Log out
           </button>
         </div>

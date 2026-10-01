@@ -7,6 +7,8 @@ import PostPage from './pages/PostPage';
 import CreatePost from './components/profile/CreatePost';
 import Navigation from './components/basic/Navigation';
 import ProtectedRoute from './components/basic/ProtectedRoute';
+import AlbumPage from './pages/AlbumPage';
+import FriendRequestsPage from './pages/FriendRequestPage';
 import './App.css';
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
                     <Route path="/profile/:userId" element={<ProfilePage />} />
                     <Route path="/post/:postId" element={<PostPage />} />
                     <Route path="/create" element={<CreatePost />} />
+                    <Route path="/album/:albumId" element={<AlbumPage />} />
+                    <Route path="/friends/requests" element={<FriendRequestsPage />} />
                   </Routes>
                 </main>
               </ProtectedRoute>
