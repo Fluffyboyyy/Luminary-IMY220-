@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { api } from '../../api';
 import './EditProfile.css';
 
 const EditProfile = ({ profile, onUpdate }) => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: profile.name || '',
     username: profile.username || '',
@@ -10,6 +14,10 @@ const EditProfile = ({ profile, onUpdate }) => {
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
 
   const validate = () => {
     const newErrors = {};
@@ -53,6 +61,19 @@ const EditProfile = ({ profile, onUpdate }) => {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setDeleteError('');
+    try {
+      await api('/api/users/me', { method: 'DELETE' });
+      // Backend clears the session too, so just send them to the splash page
+      window.location.href = '/';
+    } catch (err) {
+      setDeleteError(err.message || 'Could not delete profile');
+      setIsDeleting(false);
     }
   };
 
@@ -116,13 +137,56 @@ const EditProfile = ({ profile, onUpdate }) => {
           )}
         </div>
 
-        <button
-          type="submit"
-          className="btn btn-primary w-full md:w-auto px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-[0.95rem]"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Saving...' : 'Save Profile'}
-        </button>
+        <div className="edit-profile-actions flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 mt-6">
+          <button
+            type="submit"
+            className="btn btn-primary px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-[0.95rem]"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Saving...' : 'Save Profile'}
+          </button>
+
+          {!confirmDelete ? (
+            <button
+              type="button"
+              className="btn btn-danger px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-[0.95rem]"
+              onClick={() => {
+                setConfirmDelete(true);
+                setDeleteError('');
+              }}
+            >
+              Delete Profile
+            </button>
+          ) : (
+            <div className="delete-confirm-box">
+              <p className="delete-confirm-text">
+                Delete your account permanently? This cannot be undone.
+              </p>
+              <div className="delete-confirm-actions">
+                <button
+                  type="button"
+                  className="btn btn-danger px-4 py-2 text-sm"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? 'Deleting...' : 'Yes, delete'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary px-4 py-2 text-sm"
+                  onClick={() => setConfirmDelete(false)}
+                  disabled={isDeleting}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {deleteError && (
+          <p className="error-message mt-3">{deleteError}</p>
+        )}
       </form>
     </div>
   );

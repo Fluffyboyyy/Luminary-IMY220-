@@ -1,0 +1,133 @@
+.admin-tabs {
+  border-bottom: 2px solid var(--color-gray-light);
+  padding-bottom: 0.5rem;
+}
+
+.admin-tab {
+  background: transparent;
+  border: 2px solid var(--color-gray-light);
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--color-gray);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.admin-tab:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.admin-tab.active {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.admin-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-row {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-light);
+  border-radius: var(--radius-md);
+  transition: box-shadow var(--transition-fast);
+}
+
+.admin-row:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-btn {
+  background: var(--color-gray-light);
+  color: var(--color-dark);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-primary);
+}
+
+.admin-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-btn:hover:not(:disabled) {
+  background: var(--color-gray);
+  color: var(--color-white);
+}
+
+.admin-btn-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark, #5A52D5);
+}
+
+.admin-btn-danger {
+  background: var(--color-secondary);
+  color: var(--color-white);
+}
+
+.admin-btn-danger:hover:not(:disabled) {
+  background: #e04e6a;
+}
+
+.admin-input {
+  background: var(--color-background);
+  border: 2px solid var(--color-gray-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-family: var(--font-primary);
+  color: var(--color-dark);
+  font-size: 0.9rem;
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: var(--color-white);
+}
+
+.admin-report-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--color-secondary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.admin-report-badge-high {
+  background: #b30000;
+  animation: pulseBadge 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.05); }
+}
+
+.admin-reports-list {
+  border-left: 2px solid var(--color-gray-light);
+  padding-left: 0.75rem;
+  margin-left: 0.25rem;
+}

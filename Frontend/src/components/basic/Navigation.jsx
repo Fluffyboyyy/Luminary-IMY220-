@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { api } from '../../api';
 import './Navigation.css';
 
 const Navigation = () => {
   const location = useLocation();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    api('/api/auth/me')
+      .then(setUser)
+      .catch(() => setUser(null));
+  }, []);
+
   const isActive = (path) =>
     location.pathname === path || location.pathname.startsWith(path + '/');
 
   const handleLogout = async () => {
-  await fetch('http://localhost:5000/api/auth/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-  window.location.href = '/';
-};
+    try {
+      await api('/api/auth/logout', { method: 'POST' });
+    } catch {
+      // ignore
+    }
+    window.location.href = '/';
+  };
 
   return (
     <nav className="main-nav">
@@ -42,13 +52,29 @@ const Navigation = () => {
           >
             Profile
           </Link>
+
+          {user?.isAdmin && (
+            <Link
+              to="/admin"
+              className={`nav-link text-xs md:text-sm rounded-full px-3 py-1.5 md:px-4 md:py-2 ${
+                isActive('/admin') ? 'active' : ''
+              }`}
+            >
+              Admin
+            </Link>
+          )}
+
           <Link
             to="/create"
             className="nav-btn nav-create rounded-full text-xs md:text-sm px-3 py-1.5 md:px-5 md:py-2"
           >
             + New Post
           </Link>
-          <button onClick={handleLogout} className="nav-link text-xs md:text-sm rounded-full px-3 py-1.5 md:px-4 md:py-2">
+
+          <button
+            onClick={handleLogout}
+            className="nav-link text-xs md:text-sm rounded-full px-3 py-1.5 md:px-4 md:py-2"
+          >
             Log out
           </button>
         </div>

@@ -37,7 +37,7 @@ app.use('/api/albums', require('./routes/albums'))
 app.use('/api/friends', require('./routes/friends'))
 app.use('/api/activity', require('./routes/activity'))
 app.use('/api/admin', require('./routes/admin'))
-app.use('/api/report', require('./routes/reports'))
+app.use('/api/reports', require('./routes/reports'))
 
 
 
