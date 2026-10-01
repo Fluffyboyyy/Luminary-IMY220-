@@ -53,82 +53,103 @@ const FeedPage = () => {
   };
 
   return (
-    <div className="feed-page">
-      <div className="feed-header">
-        <h1>Activity Feed</h1>
-        <p className="feed-subtitle">
-          {feedType === 'local' 
-            ? 'See what your friends are sharing' 
+    <div className="max-w-[800px] mx-auto p-2 md:p-8">
+      <div className="text-center mb-4 md:mb-6">
+        <h1 className="text-2xl md:text-4xl mb-1">Activity Feed</h1>
+        <p className="feed-subtitle text-sm md:text-lg">
+          {feedType === 'local'
+            ? 'See what your friends are sharing'
             : 'Discover posts from the community'}
         </p>
       </div>
 
-      <div className="search-container">
+      <div className="relative max-w-full md:max-w-[500px] mx-auto mb-4 md:mb-6">
         <input
           type="text"
-          className="search-input"
+          className="search-input w-full py-2 md:py-3 pl-10 md:pl-12 pr-4 text-sm md:text-base"
           placeholder="Search posts, users, hashtags"
           value={searchTerm}
           onChange={handleSearch}
         />
-        <span className="search-icon">🔍</span>
+        <span className="search-icon left-4 text-base md:text-lg">🔍</span>
       </div>
 
-      <div className="feed-tabs">
-        <button 
-          className={`feed-tab ${feedType === 'local' ? 'active' : ''}`}
+      <div className="flex justify-center gap-1 md:gap-2 mb-4 md:mb-8">
+        <button
+          className={`feed-tab px-3 py-1.5 md:px-6 md:py-2.5 text-xs md:text-sm ${
+            feedType === 'local' ? 'active' : ''
+          }`}
           onClick={() => setFeedType('local')}
         >
           Friends
         </button>
-        <button 
-          className={`feed-tab ${feedType === 'global' ? 'active' : ''}`}
+        <button
+          className={`feed-tab px-3 py-1.5 md:px-6 md:py-2.5 text-xs md:text-sm ${
+            feedType === 'global' ? 'active' : ''
+          }`}
           onClick={() => setFeedType('global')}
         >
           Global
         </button>
       </div>
 
-      <div className="posts-grid">
+      <div className="flex flex-col gap-4 md:gap-8">
         {mockPosts.map((post) => (
           <article key={post.id} className="post-card">
-            <div className="post-header">
-              <Link to={`/profile/${post.userId}`} className="post-user">
-                <img 
-                  src={post.avatar} 
+            <div className="flex items-center justify-between p-3 md:p-5">
+              <Link
+                to={`/profile/${post.userId}`}
+                className="post-user flex items-center gap-2 md:gap-3 flex-1"
+              >
+                <img
+                  src={post.avatar}
                   alt={post.user}
-                  className="post-avatar"
+                  className="post-avatar w-8 h-8 md:w-10 md:h-10"
                 />
-                <div className="post-user-info">
-                  <span className="post-username">{post.user}</span>
-                  <span className="post-userhandle">@{post.username}</span>
+                <div className="flex flex-col">
+                  <span className="post-username text-sm md:text-[0.95rem]">
+                    {post.user}
+                  </span>
+                  <span className="post-userhandle text-xs md:text-[0.8rem]">
+                    @{post.username}
+                  </span>
                 </div>
               </Link>
-              <span className="post-time">{post.createdAt}</span>
+              <span className="post-time text-xs md:text-[0.8rem]">
+                {post.createdAt}
+              </span>
             </div>
 
             <Link to={`/post/${post.id}`} className="post-image-link">
               <div className="post-image-wrapper">
-                <img 
-                  src={post.image} 
+                <img
+                  src={post.image}
                   alt={post.description}
                   className="post-image"
                 />
               </div>
             </Link>
 
-            <div className="post-content">
+            <div className="p-3 md:p-5">
               <Link to={`/post/${post.id}`} className="post-description-link">
-                <p className="post-description">{post.description}</p>
+                <p className="post-description text-sm md:text-[0.95rem] leading-relaxed mb-2">
+                  {post.description}
+                </p>
               </Link>
-              <div className="post-hashtags">
+              <div className="flex flex-wrap gap-2 mb-3">
                 {post.hashtags.map((tag, index) => (
-                  <span key={index} className="hashtag">{tag}</span>
+                  <span key={index} className="hashtag text-sm md:text-[0.9rem]">
+                    {tag}
+                  </span>
                 ))}
               </div>
-              <div className="post-stats">
-                <span className="post-stat">❤️ {post.likes}</span>
-                <span className="post-stat">💬 {post.comments}</span>
+              <div className="post-stats flex gap-4 md:gap-6 pt-3">
+                <span className="post-stat text-xs md:text-[0.9rem]">
+                  ❤️ {post.likes}
+                </span>
+                <span className="post-stat text-xs md:text-[0.9rem]">
+                  💬 {post.comments}
+                </span>
               </div>
             </div>
           </article>

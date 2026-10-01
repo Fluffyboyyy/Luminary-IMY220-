@@ -67,53 +67,61 @@ const EditProfile = ({ profile }) => {
   };
 
   return (
-    <div className="edit-profile">
-      <h3 className="edit-profile-title">Edit Profile</h3>
+    <div className="edit-profile p-4 md:p-8 mt-8">
+      <h3 className="edit-profile-title pb-2 mb-4 md:mb-8">Edit Profile</h3>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label htmlFor="name">Name *</label>
+        <div className="form-group mb-4">
+          <label htmlFor="name" className="mb-1">Name *</label>
           <input
             type="text"
             id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className={errors.name ? 'error' : ''}
+            className={`px-3 py-2 md:px-3.5 md:py-2.5 text-sm md:text-[0.95rem] ${
+              errors.name ? 'error' : ''
+            }`}
             placeholder="Enter your full name"
           />
-          {errors.name && <span className="error-message">{errors.name}</span>}
+          {errors.name && <span className="error-message mt-1">{errors.name}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="username">Username *</label>
+        <div className="form-group mb-4">
+          <label htmlFor="username" className="mb-1">Username *</label>
           <input
             type="text"
             id="username"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            className={errors.username ? 'error' : ''}
+            className={`px-3 py-2 md:px-3.5 md:py-2.5 text-sm md:text-[0.95rem] ${
+              errors.username ? 'error' : ''
+            }`}
             placeholder="Enter your username"
           />
-          {errors.username && <span className="error-message">{errors.username}</span>}
+          {errors.username && (
+            <span className="error-message mt-1">{errors.username}</span>
+          )}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="email">Email *</label>
+        <div className="form-group mb-4">
+          <label htmlFor="email" className="mb-1">Email *</label>
           <input
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className={errors.email ? 'error' : ''}
+            className={`px-3 py-2 md:px-3.5 md:py-2.5 text-sm md:text-[0.95rem] ${
+              errors.email ? 'error' : ''
+            }`}
             placeholder="Enter your email"
           />
-          {errors.email && <span className="error-message">{errors.email}</span>}
+          {errors.email && <span className="error-message mt-1">{errors.email}</span>}
         </div>
 
-        <div className="form-group">
-          <label htmlFor="location">Location</label>
+        <div className="form-group mb-4">
+          <label htmlFor="location" className="mb-1">Location</label>
           <input
             type="text"
             id="location"
@@ -121,26 +129,34 @@ const EditProfile = ({ profile }) => {
             value={formData.location}
             onChange={handleChange}
             placeholder="Enter your location"
+            className="px-3 py-2 md:px-3.5 md:py-2.5 text-sm md:text-[0.95rem]"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="bio">Bio</label>
+        <div className="form-group mb-4">
+          <label htmlFor="bio" className="mb-1">Bio</label>
           <textarea
             id="bio"
             name="bio"
             value={formData.bio}
             onChange={handleChange}
-            className={errors.bio ? 'error' : ''}
+            className={`px-3 py-2 md:px-3.5 md:py-2.5 text-sm md:text-[0.95rem] ${
+              errors.bio ? 'error' : ''
+            }`}
             placeholder="Tell us about yourself (max 150 characters)"
             maxLength="150"
             rows="3"
           />
-          <span className="char-count">{formData.bio.length}/150</span>
-          {errors.bio && <span className="error-message">{errors.bio}</span>}
+          <span className="char-count mt-1">{formData.bio.length}/150</span>
+          {errors.bio && <span className="error-message mt-1">{errors.bio}</span>}
         </div>
 
-        <button type="submit" className="btn btn-primary">Save Profile</button>
+        <button
+          type="submit"
+          className="btn btn-primary w-full md:w-auto px-5 py-2.5 md:px-6 md:py-3 text-sm md:text-[0.95rem]"
+        >
+          Save Profile
+        </button>
       </form>
     </div>
   );

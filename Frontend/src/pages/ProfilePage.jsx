@@ -5,7 +5,6 @@ import EditProfile from '../components/profile/EditProfile';
 import PostList from '../components/profile/PostList';
 import CreatePost from '../components/profile/CreatePost';
 import FriendList from '../components/profile/FriendList';
-import './ProfilePage.css';
 
 const ProfilePage = () => {
   const { userId } = useParams();
@@ -91,16 +90,12 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="profile-page">
-      <div className="profile-container">
+    <div className="max-w-[900px] mx-auto p-2 md:p-8 min-h-screen">
+      <div className="flex flex-col gap-4 md:gap-8">
         <Profile profile={profileData} isOwnProfile={profileData.isOwnProfile} />
-        
         <EditProfile profile={profileData} />
-        
         <CreatePost />
-        
         <FriendList friends={friendsData} isOwnProfile={profileData.isOwnProfile} />
-        
         <PostList posts={postsData} isOwnProfile={profileData.isOwnProfile} />
       </div>
     </div>

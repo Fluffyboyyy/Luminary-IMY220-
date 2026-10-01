@@ -1,244 +1,111 @@
-/* ========================================
-                Desktop
-   ======================================== */
-
 .edit-post {
-  background: var(--color-white, #FFFFFF);
-  border: 1px solid var(--color-gray-light, #E8E8F0);
-  padding: var(--spacing-lg, 2rem);
-  border-radius: var(--radius-md, 12px);
-  margin-top: var(--spacing-lg, 2rem);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-light);
+  border-radius: var(--radius-md);
 }
 
 .edit-post-title {
   font-size: 1.3rem;
-  color: var(--color-dark, #1A1A2E);
-  margin-bottom: var(--spacing-lg, 2rem);
-  padding-bottom: var(--spacing-sm, 0.5rem);
-  border-bottom: 2px solid var(--color-primary, #6C63FF);
-}
-
-.edit-post-actions {
-  display: flex;
-  gap: var(--spacing-md, 1rem);
-  margin-top: var(--spacing-md, 1rem);
-}
-
-.edit-post-not-found {
-  text-align: center;
-  padding: var(--spacing-xl, 2rem);
-  color: var(--color-gray, #6B6B7B);
-}
-
-.edit-post .form-group {
-  margin-bottom: var(--spacing-md, 1rem);
+  color: var(--color-dark);
+  border-bottom: 2px solid var(--color-primary);
 }
 
 .edit-post .form-group label {
   display: block;
   font-weight: 600;
   font-size: 0.9rem;
-  color: var(--color-dark, #1A1A2E);
-  margin-bottom: var(--spacing-xs, 0.25rem);
+  color: var(--color-dark);
 }
 
 .edit-post .form-group input,
 .edit-post .form-group textarea {
   width: 100%;
-  padding: 10px 14px;
-  border: 2px solid var(--color-gray-light, #E8E8F0);
-  border-radius: var(--radius-sm, 8px);
-  font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: 0.95rem;
-  transition: border-color var(--transition-fast, 0.2s ease);
-  background: var(--color-background, #F5F5FA);
+  border: 2px solid var(--color-gray-light);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-primary);
+  transition: border-color var(--transition-fast);
+  background: var(--color-background);
 }
 
 .edit-post .form-group input:focus,
 .edit-post .form-group textarea:focus {
   outline: none;
-  border-color: var(--color-primary, #6C63FF);
-  background: var(--color-white, #FFFFFF);
+  border-color: var(--color-primary);
+  background: var(--color-white);
 }
 
 .edit-post .form-group input.error,
 .edit-post .form-group textarea.error {
-  border-color: var(--color-secondary, #FF6584);
+  border-color: var(--color-secondary);
 }
 
 .edit-post .error-message {
   display: block;
-  color: var(--color-secondary, #FF6584);
+  color: var(--color-secondary);
   font-size: 0.8rem;
-  margin-top: var(--spacing-xs, 0.25rem);
 }
 
 .edit-post .btn-secondary {
-  background: var(--color-gray-light, #E8E8F0);
-  color: var(--color-dark, #1A1A2E);
+  background: var(--color-gray-light);
+  color: var(--color-dark);
 }
 
 .edit-post .btn-secondary:hover {
-  background: var(--color-gray, #6B6B7B);
-  color: var(--color-white, #FFFFFF);
+  background: var(--color-gray);
+  color: var(--color-white);
 }
 
-/* ========================================
-   Drag & Drop Styles
-   ======================================== */
-
+/* Drag & Drop */
 .hidden-file-input {
   display: none;
 }
 
 .drop-zone {
-  border: 2px dashed var(--color-gray-light, #E8E8F0);
-  border-radius: var(--radius-md, 12px);
-  padding: var(--spacing-lg, 2rem);
-  text-align: center;
+  border: 2px dashed var(--color-gray-light);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: all var(--transition-fast, 0.2s ease);
-  background: var(--color-background, #F5F5FA);
-  min-height: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  transition: all var(--transition-fast);
+  background: var(--color-background);
 }
 
 .drop-zone:hover {
-  border-color: var(--color-primary, #6C63FF);
-  background: var(--color-white, #FFFFFF);
+  border-color: var(--color-primary);
+  background: var(--color-white);
 }
 
 .drop-zone.dragging {
-  border-color: var(--color-primary, #6C63FF);
+  border-color: var(--color-primary);
   background: #F0EEFF;
   transform: scale(1.02);
 }
 
 .drop-zone.error {
-  border-color: var(--color-secondary, #FF6584);
+  border-color: var(--color-secondary);
   background: #FFF5F7;
 }
 
 .drop-zone-text {
-  font-size: 1rem;
-  color: var(--color-dark, #1A1A2E);
-  margin: 0;
+  color: var(--color-dark);
 }
 
 .drop-zone-subtext {
-  color: var(--color-gray, #6B6B7B);
-  font-size: 0.85rem;
+  color: var(--color-gray);
 }
 
-/* File Info Display */
 .file-info {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm, 0.5rem);
-  padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
-  background: var(--color-white, #FFFFFF);
-  border: 2px solid var(--color-primary, #6C63FF);
-  border-radius: var(--radius-sm, 8px);
-}
-
-.file-icon {
-  font-size: 1.5rem;
-}
-
-.file-name {
-  font-size: 0.95rem;
-  color: var(--color-dark, #1A1A2E);
-  font-weight: 500;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
 }
 
 .remove-file-btn {
   background: none;
   border: none;
-  font-size: 1.2rem;
-  color: var(--color-secondary, #FF6584);
+  color: var(--color-secondary);
   cursor: pointer;
-  padding: 0 4px;
-  transition: transform var(--transition-fast, 0.2s ease);
+  transition: transform var(--transition-fast);
 }
 
 .remove-file-btn:hover {
   transform: scale(1.2);
-}
-
-/* ========================================
-   Tablets (max-width: 768px)
-   ======================================== */
-
-@media (max-width: 768px) {
-  .edit-post {
-    padding: var(--spacing-md, 1rem);
-  }
-
-  .drop-zone {
-    min-height: 150px;
-    padding: var(--spacing-md, 1rem);
-  }
-}
-
-/* ========================================
-   Mobile (max-width: 480px)
-   ======================================== */
-
-@media (max-width: 480px) {
-  .edit-post {
-    padding: var(--spacing-md, 1rem);
-    border-radius: var(--radius-sm, 8px);
-  }
-  
-  .edit-post-title {
-    font-size: 1.1rem;
-    margin-bottom: var(--spacing-md, 1rem);
-  }
-  
-  .edit-post .form-group {
-    margin-bottom: var(--spacing-sm, 0.5rem);
-  }
-  
-  .edit-post .form-group label {
-    font-size: 0.85rem;
-  }
-  
-  .edit-post .form-group input,
-  .edit-post .form-group textarea {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-  }
-  
-  .edit-post-actions {
-    flex-direction: column;
-  }
-  
-  .edit-post-actions .btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  .drop-zone {
-    padding: var(--spacing-md, 1rem);
-    min-height: 120px;
-  }
-
-  .drop-zone-text {
-    font-size: 0.9rem;
-  }
-
-  .drop-zone-subtext {
-    font-size: 0.75rem;
-  }
-
-  .file-info {
-    padding: var(--spacing-xs, 0.25rem) var(--spacing-sm, 0.5rem);
-  }
-
-  .file-name {
-    font-size: 0.85rem;
-  }
 }

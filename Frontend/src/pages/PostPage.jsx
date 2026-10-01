@@ -147,15 +147,30 @@ const PostPage = () => {
   };
 
   if (isLoading) {
-    return <div className="post-page-loading">Loading</div>;
+    return (
+      <div className="post-page flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="inline-block w-10 h-10 border-4 border-[color:var(--color-gray-light)] border-t-[color:var(--color-primary)] rounded-full animate-spin mb-4" />
+          <p className="text-[color:var(--color-gray)]">Loading post...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!post) {
     return (
-      <div className="post-page-not-found">
-        <h2>Post Not Found</h2>
-        <p>The post you're looking for doesn't exist.</p>
-        <Link to="/home" className="btn btn-primary">Go Home</Link>
+      <div className="post-page flex flex-col items-center justify-center min-h-[400px] text-center gap-4 p-8">
+        <span className="not-found-icon">🔍</span>
+        <h2 className="text-xl md:text-2xl">Post Not Found</h2>
+        <p className="text-[color:var(--color-gray)]">
+          The post you're looking for doesn't exist.
+        </p>
+        <Link
+          to="/home"
+          className="btn btn-primary px-5 py-2.5 text-sm rounded-full bg-[color:var(--color-primary)] text-white"
+        >
+          Go Home
+        </Link>
       </div>
     );
   }
@@ -164,12 +179,15 @@ const PostPage = () => {
 
   if (isEditing) {
     return (
-      <div className="post-page">
-        <div className="post-page-container">
-          <button className="back-button" onClick={() => setIsEditing(false)}>
+      <div className="post-page max-w-[900px] mx-auto p-2 md:p-8 min-h-screen">
+        <div className="flex flex-col gap-4 md:gap-8">
+          <button
+            className="back-button px-2 py-1 md:px-4 md:py-2"
+            onClick={() => setIsEditing(false)}
+          >
             ← Back to Post
           </button>
-          <EditPost 
+          <EditPost
             post={post}
             onSave={handleSaveEdit}
             onCancel={() => setIsEditing(false)}
@@ -180,13 +198,13 @@ const PostPage = () => {
   }
 
   return (
-    <div className="post-page">
-      <div className="post-page-container">
-        <Link to="/home" className="back-button">
+    <div className="post-page max-w-[900px] mx-auto p-2 md:p-8 min-h-screen">
+      <div className="flex flex-col gap-4 md:gap-8">
+        <Link to="/home" className="back-button px-2 py-1 md:px-4 md:py-2">
           ← Back to Feed
         </Link>
 
-        <PostDetails 
+        <PostDetails
           post={post}
           isOwner={isOwner}
           isLiked={isLiked}
@@ -197,11 +215,11 @@ const PostPage = () => {
           currentUser={currentUser}
         />
 
-        <CommentSection 
+        <CommentSection
           comments={comments}
           onAddComment={handleComment}
           onDeleteComment={handleDeleteComment}
-          onLikeComment={handleLikeComment} 
+          onLikeComment={handleLikeComment}
           currentUser={currentUser}
         />
       </div>
