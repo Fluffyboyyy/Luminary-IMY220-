@@ -37,16 +37,14 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', 
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (response.ok && data.user) {
         if (onLogin) onLogin(data.user);
         window.location.href = '/home';
       } else {
@@ -62,7 +60,7 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
 
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
-      <div className="form-group">
+      <div className="flex flex-col gap-1">
         <label htmlFor="login-email">Email Address</label>
         <input
           id="login-email"
@@ -72,10 +70,11 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
           placeholder="Enter your email"
           required
           disabled={isLoading}
+          className="w-full px-3 py-2.5 md:px-4 md:py-3 text-sm md:text-base"
         />
       </div>
 
-      <div className="form-group">
+      <div className="flex flex-col gap-1">
         <label htmlFor="login-password">Password</label>
         <input
           id="login-password"
@@ -86,23 +85,24 @@ const LoginForm = ({ onLogin, onSwitchToRegister }) => {
           required
           minLength="6"
           disabled={isLoading}
+          className="w-full px-3 py-2.5 md:px-4 md:py-3 text-sm md:text-base"
         />
       </div>
 
-      {error && <div className="form-error">{error}</div>}
+      {error && <div className="form-error px-2 py-1.5 md:px-4 md:py-2 text-sm">{error}</div>}
 
-      <button 
-        type="submit" 
-        className="btn btn-primary btn-block"
+      <button
+        type="submit"
+        className="btn btn-primary btn-block px-4 py-3 md:py-3.5 text-sm md:text-base"
         disabled={isLoading}
       >
         {isLoading ? 'Signing In...' : 'Sign In'}
       </button>
 
-      <p className="form-footer-text">
+      <p className="form-footer-text text-sm">
         Don't have an account?{' '}
-        <button 
-          type="button" 
+        <button
+          type="button"
           className="link-btn"
           onClick={onSwitchToRegister}
           disabled={isLoading}

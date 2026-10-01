@@ -1,0 +1,58 @@
+.friend-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  font-family: var(--font-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: fit-content;
+}
+
+.friend-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.friend-btn-add {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.friend-btn-add:hover:not(:disabled) {
+  background: var(--color-primary-dark, #5A52D5);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.friend-btn-pending {
+  background: transparent;
+  border-color: var(--color-gray-light);
+  color: var(--color-gray);
+}
+
+.friend-btn-accept {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.friend-btn-accept:hover:not(:disabled) {
+  background: var(--color-primary-dark, #5A52D5);
+  transform: translateY(-1px);
+}
+
+.friend-btn-friends {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.friend-btn-friends:hover:not(:disabled) {
+  background: rgba(255, 101, 132, 0.08);
+  border-color: var(--color-secondary);
+  color: var(--color-secondary);
+}

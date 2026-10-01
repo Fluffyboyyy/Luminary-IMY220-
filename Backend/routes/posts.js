@@ -12,29 +12,35 @@ function parseHashtags(hashtags) {
     .filter(h => h.length > 0);
 }
 
-// GET /api/posts/:id - View a single post
+// GET /api/posts/:id
 router.get('/:id', async (req, res) => {
   try {
     const db = getDB();
     const post = await db.collection('posts').findOne({ _id: new ObjectId(req.params.id) });
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
-    // Populate owner
     const owner = await db.collection('users').findOne(
       { _id: post.owner },
       { projection: { password: 0 } }
     );
 
-    // Populate comments
+    // Populate comment users
     const commentUserIds = post.comments.map(c => c.user);
     const commentUsers = await db.collection('users')
       .find({ _id: { $in: commentUserIds } }, { projection: { password: 0 } })
       .toArray();
 
-    post.comments = post.comments.map(c => ({
-      ...c,
-      user: commentUsers.find(u => u._id.toString() === c.user.toString()) || null
-    }));
+    post.comments = post.comments.map(c => {
+      const commentLikes = c.likes || [];
+      return {
+        ...c,
+        user: commentUsers.find(u => u._id.toString() === c.user.toString()) || null,
+        likes: commentLikes.length,
+        isLiked: req.user
+          ? commentLikes.some(id => id.toString() === req.user._id.toString())
+          : false,
+      };
+    });
 
     // Populate albums
     const albums = await db.collection('albums')
@@ -44,10 +50,17 @@ router.get('/:id', async (req, res) => {
     // Report count
     const reportCount = await db.collection('reports').countDocuments({ post: post._id });
 
+    // Like count / isLiked
+    const postLikes = post.likes || [];
+    const likes = postLikes.length;
+    const isLiked = req.user
+      ? postLikes.some(id => id.toString() === req.user._id.toString())
+      : false;
+
     res.json({
-      post: { ...post, owner, albums },
+      post: { ...post, owner, albums, likes, isLiked },
       reportCount,
-      isHidden: reportCount > 2
+      isHidden: reportCount > 2,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -200,6 +213,84 @@ router.delete('/:id/comments/:commentId', requireAuth, async (req, res) => {
     );
 
     res.json({ message: 'Comment deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /api/posts/:id/like — toggle like on a post
+router.post('/:id/like', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const postId = new ObjectId(req.params.id);
+    const userId = req.user._id;
+
+    const post = await db.collection('posts').findOne({ _id: postId });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const likes = post.likes || [];
+    const hasLiked = likes.some(id => id.toString() === userId.toString());
+
+    if (hasLiked) {
+      await db.collection('posts').updateOne(
+        { _id: postId },
+        { $pull: { likes: userId } }
+      );
+    } else {
+      await db.collection('posts').updateOne(
+        { _id: postId },
+        { $addToSet: { likes: userId } }
+      );
+    }
+
+    const updated = await db.collection('posts').findOne({ _id: postId });
+    res.json({
+      likes: updated.likes?.length || 0,
+      isLiked: !hasLiked,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+
+// POST /api/posts/:id/comments/:commentId/like
+router.post('/:id/comments/:commentId/like', requireAuth, async (req, res) => {
+  try {
+    const db = getDB();
+    const postId = new ObjectId(req.params.id);
+    const commentId = new ObjectId(req.params.commentId);
+    const userId = req.user._id;
+
+    const post = await db.collection('posts').findOne({ _id: postId });
+    if (!post) return res.status(404).json({ message: 'Post not found' });
+
+    const comment = post.comments.find(c => c._id.toString() === commentId.toString());
+    if (!comment) return res.status(404).json({ message: 'Comment not found' });
+
+    const likes = comment.likes || [];
+    const hasLiked = likes.some(id => id.toString() === userId.toString());
+
+    if (hasLiked) {
+      await db.collection('posts').updateOne(
+        { _id: postId, 'comments._id': commentId },
+        { $pull: { 'comments.$.likes': userId } }
+      );
+    } else {
+      await db.collection('posts').updateOne(
+        { _id: postId, 'comments._id': commentId },
+        { $addToSet: { 'comments.$.likes': userId } }
+      );
+    }
+
+    const updated = await db.collection('posts').findOne({ _id: postId });
+    const updatedComment = updated.comments.find(c => c._id.toString() === commentId.toString());
+    const updatedLikes = updatedComment.likes || [];
+
+    res.json({
+      likes: updatedLikes.length,
+      isLiked: !hasLiked,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

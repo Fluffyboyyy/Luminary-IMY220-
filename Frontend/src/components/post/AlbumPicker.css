@@ -1,0 +1,93 @@
+.album-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.album-picker-modal {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  width: 100%;
+  max-width: 420px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.album-picker-close {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--color-gray);
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.album-picker-close:hover {
+  background: var(--color-gray-light);
+  color: var(--color-dark);
+}
+
+.album-picker-item {
+  background: var(--color-background);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  width: 100%;
+  font-family: var(--font-primary);
+}
+
+.album-picker-item:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-white);
+}
+
+.album-picker-item:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.album-picker-item.already-in {
+  opacity: 0.55;
+}
+
+.album-picker-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-gray-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.album-picker-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.album-picker-item .flex-1 {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

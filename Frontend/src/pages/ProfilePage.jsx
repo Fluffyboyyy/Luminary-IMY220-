@@ -1,107 +1,147 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Profile from '../components/profile/Profile';
 import EditProfile from '../components/profile/EditProfile';
 import PostList from '../components/profile/PostList';
 import CreatePost from '../components/profile/CreatePost';
 import FriendList from '../components/profile/FriendList';
-import './ProfilePage.css';
+import AlbumList from '../components/albums/Albumlist';
+import FriendButton from '../components/profile/FriendButton';
+import { api } from '../api';
 
 const ProfilePage = () => {
   const { userId } = useParams();
-  
-  const profileData = {
-    id: userId || '1',
-    name: 'John Doe',
-    username: 'johndoe',
-    bio: 'Photography enthusiast',
-    email: 'john@example.com',
-    location: 'New York, USA',
-    joinDate: new Date('2024-01-15'),
-    postsCount: 12,
-    followersCount: 156,
-    followingCount: 89,
-    isOwnProfile: true
-  };
+  const [profileData, setProfileData] = useState(null);
+  const [friendsData, setFriendsData] = useState([]);
+  const [postsData, setPostsData] = useState([]);
+  const [albumsData, setAlbumsData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const friendsData = [
-    {
-      id: 2,
-      name: 'Jane Smith',
-      username: 'janesmith',
-      avatar: 'https://ui-avatars.com/api/?name=Jane+Smith&background=FF6584&color=fff&size=60'
-    },
-    {
-      id: 3,
-      name: 'Mike Johnson',
-      username: 'mikej',
-      avatar: 'https://ui-avatars.com/api/?name=Mike+Johnson&background=00D4AA&color=fff&size=60'
-    },
-    {
-      id: 4,
-      name: 'Sarah Wilson',
-      username: 'swilson',
-      avatar: 'https://ui-avatars.com/api/?name=Sarah+Wilson&background=FFB347&color=fff&size=60'
-    },
-    {
-      id: 5,
-      name: 'Tom Brown',
-      username: 'tombrown',
-      avatar: 'https://ui-avatars.com/api/?name=Tom+Brown&background=6C63FF&color=fff&size=60'
-    },
-    {
-      id: 6,
-      name: 'Emily Davis',
-      username: 'emilyd',
-      avatar: 'https://ui-avatars.com/api/?name=Emily+Davis&background=FF6584&color=fff&size=60'
-    },
-    {
-      id: 7,
-      name: 'Chris Lee',
-      username: 'chrislee',
-      avatar: 'https://ui-avatars.com/api/?name=Chris+Lee&background=00D4AA&color=fff&size=60'
-    }
-  ];
+  const fetchProfile = useCallback(async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      let targetId = userId;
+      if (!targetId) {
+        const me = await api('/api/auth/me');
+        targetId = me._id;
+      }
 
-  const postsData = [
-    {
-      id: 1,
-      image: 'https://picsum.photos/seed/1/600/350',
-      description: 'Beautiful sunset at the beach',
-      likes: 42,
-      comments: 5,
-      createdAt: new Date('2024-08-28')
-    },
-    {
-      id: 2,
-      image: 'https://picsum.photos/seed/2/600/350',
-      description: 'New art project in progress',
-      likes: 28,
-      comments: 3,
-      createdAt: new Date('2024-08-27')
-    },
-    {
-      id: 3,
-      image: 'https://picsum.photos/seed/3/600/350',
-      description: 'Coffee and coding',
-      likes: 56,
-      comments: 8,
-      createdAt: new Date('2024-08-26')
+      const data = await api(`/api/users/${targetId}`);
+      const u = data.user;
+
+      setProfileData({
+        _id: u._id,
+        name: u.name,
+        username: u.username,
+        email: u.email || '',
+        bio: u.bio || '',
+        avatar: u.profileImage,
+        isAdmin: u.isAdmin,
+        postsCount: data.posts?.length || 0,
+        albumsCount: data.albums?.length || 0,
+        friendsCount: data.friends?.length || 0,
+        isOwnProfile: data.isOwnProfile,
+        friendshipStatus: data.friendshipStatus,
+        limited: data.limited,
+      });
+
+      setPostsData(data.posts || []);
+      setFriendsData(data.friends || []);
+      setAlbumsData(data.albums || []);
+    } catch (err) {
+      setError(err.message || 'Failed to load profile');
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  }, [userId]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="inline-block w-10 h-10 border-4 border-[color:var(--color-gray-light)] border-t-[color:var(--color-primary)] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !profileData) {
+    return (
+      <div className="max-w-[900px] mx-auto p-8 text-center">
+        <p className="text-[color:var(--color-secondary)]">
+          {error || 'Profile not found'}
+        </p>
+      </div>
+    );
+  }
+
+  const isOwnProfile = profileData.isOwnProfile;
 
   return (
-    <div className="profile-page">
-      <div className="profile-container">
-        <Profile profile={profileData} isOwnProfile={profileData.isOwnProfile} />
-        
-        <EditProfile profile={profileData} />
-        
-        <CreatePost />
-        
-        <FriendList friends={friendsData} isOwnProfile={profileData.isOwnProfile} />
-        
-        <PostList posts={postsData} isOwnProfile={profileData.isOwnProfile} />
+    <div className="max-w-[900px] mx-auto p-2 md:p-8 min-h-screen">
+      <div className="flex flex-col gap-4 md:gap-8">
+        <Profile profile={profileData} isOwnProfile={isOwnProfile} />
+
+        {/* Friend button — only when viewing someone else's profile */}
+        {!isOwnProfile && (
+          <div className="flex justify-center -mt-2 md:-mt-4">
+            <FriendButton
+              userId={profileData._id}
+              friendshipStatus={profileData.friendshipStatus}
+              onStatusChange={(newStatus) => {
+                setProfileData((prev) => ({
+                  ...prev,
+                  friendshipStatus: newStatus,
+                }));
+                if (newStatus === 'friends') {
+                  fetchProfile();
+                }
+              }}
+            />
+          </div>
+        )}
+
+        {isOwnProfile && (
+          <>
+            <EditProfile
+              profile={profileData}
+              onUpdate={async (updatedData) => {
+                try {
+                  const res = await api('/api/users/me', {
+                    method: 'PUT',
+                    body: JSON.stringify(updatedData),
+                  });
+                  setProfileData((prev) => ({
+                    ...prev,
+                    name: res.user.name,
+                    username: res.user.username,
+                    bio: res.user.bio || '',
+                    avatar: res.user.profileImage,
+                  }));
+                } catch (err) {
+                  alert(err.message);
+                }
+              }}
+            />
+            <CreatePost onCreated={fetchProfile} />
+          </>
+        )}
+
+        {!profileData.limited && (
+          <FriendList friends={friendsData} isOwnProfile={isOwnProfile} />
+        )}
+
+        <AlbumList
+          albums={albumsData}
+          isOwnProfile={isOwnProfile}
+          onAlbumsChange={setAlbumsData}
+        />
+
+        <PostList posts={postsData} isOwnProfile={isOwnProfile} />
       </div>
     </div>
   );

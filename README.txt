@@ -28,8 +28,7 @@ Backend API: http://localhost:5000
 TEST ACCOUNTS
 ============================================
 
-Email: alice@example.com
-Password: password123
-
-Email: bob@example.com
-Password: password123
+Regular user:  test@test.com    / test1234
+Admin:         admin@test.com   / admin1234
+Other users:   alice@example.com / alice1234
+               bob@example.com   / bob1234

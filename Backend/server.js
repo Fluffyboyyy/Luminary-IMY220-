@@ -9,7 +9,10 @@ const { attachUser } = require('./middleware/auth');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use(session({
@@ -33,6 +36,8 @@ app.use('/api/posts', require('./routes/posts'))
 app.use('/api/albums', require('./routes/albums'))
 app.use('/api/friends', require('./routes/friends'))
 app.use('/api/activity', require('./routes/activity'))
+app.use('/api/admin', require('./routes/admin'))
+app.use('/api/reports', require('./routes/reports'))
 
 
 
